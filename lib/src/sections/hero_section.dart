@@ -4,7 +4,10 @@ import '../components/glass_container.dart';
 import '../components/spotlight_wrapper.dart';
 
 class HeroSection extends StatelessWidget {
-  const HeroSection({super.key});
+  final VoidCallback? onViewWorkTap;
+  final VoidCallback? onContactTap;
+
+  const HeroSection({super.key, this.onViewWorkTap, this.onContactTap});
 
   @override
   Widget build(BuildContext context) {
@@ -64,16 +67,35 @@ class HeroSection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.arrow_forward, size: 16),
-              label: const Text('View Work'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
+            Row(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: onViewWorkTap,
+                  icon: const Icon(Icons.arrow_forward, size: 16),
+                  label: const Text('View Work'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton.icon(
+                  onPressed: onContactTap,
+                  icon: const Icon(Icons.email_outlined, size: 16),
+                  label: const Text('Contact Me'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(color: Colors.white.withOpacity(0.3)),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

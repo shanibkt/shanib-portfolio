@@ -8,7 +8,6 @@ void main() {
 
 class PortfolioApp extends StatelessWidget {
   const PortfolioApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

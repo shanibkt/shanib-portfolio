@@ -3,7 +3,18 @@ import 'package:flutter/material.dart';
 import 'magnetic_wrapper.dart';
 
 class NavigationBar extends StatelessWidget {
-  const NavigationBar({super.key});
+  final VoidCallback? onAboutTap;
+  final VoidCallback? onProjectsTap;
+  final VoidCallback? onExperienceTap;
+  final VoidCallback? onHireTap;
+
+  const NavigationBar({
+    super.key,
+    this.onAboutTap,
+    this.onProjectsTap,
+    this.onExperienceTap,
+    this.onHireTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,16 +56,16 @@ class NavigationBar extends StatelessWidget {
                     if (MediaQuery.of(context).size.width > 600)
                       Row(
                         children: [
-                          _NavItem(title: 'About'),
+                          _NavItem(title: 'About', onTap: onAboutTap),
                           const SizedBox(width: 32),
-                          _NavItem(title: 'Projects'),
+                          _NavItem(title: 'Projects', onTap: onProjectsTap),
                           const SizedBox(width: 32),
-                          _NavItem(title: 'Experience'),
+                          _NavItem(title: 'Experience', onTap: onExperienceTap),
                         ],
                       ),
                     MagneticWrapper(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: onHireTap,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.black,
@@ -82,7 +93,9 @@ class NavigationBar extends StatelessWidget {
 
 class _NavItem extends StatefulWidget {
   final String title;
-  const _NavItem({required this.title});
+  final VoidCallback? onTap;
+
+  const _NavItem({required this.title, this.onTap});
 
   @override
   State<_NavItem> createState() => _NavItemState();
@@ -97,13 +110,16 @@ class _NavItemState extends State<_NavItem> {
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedDefaultTextStyle(
-        duration: const Duration(milliseconds: 200),
-        style: TextStyle(
-          color: _isHovered ? Colors.white : const Color(0xFFA0AEC0),
-          fontWeight: FontWeight.w500,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 200),
+          style: TextStyle(
+            color: _isHovered ? Colors.white : const Color(0xFFA0AEC0),
+            fontWeight: FontWeight.w500,
+          ),
+          child: Text(widget.title),
         ),
-        child: Text(widget.title),
       ),
     );
   }

@@ -10,8 +10,38 @@ import '../sections/tech_arsenal_section.dart';
 import '../sections/experience_section.dart';
 import '../sections/contact_section.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final _scrollController = ScrollController();
+  final _projectsKey = GlobalKey();
+  final _experienceKey = GlobalKey();
+  final _contactKey = GlobalKey();
+
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _scrollTo(GlobalKey key) {
+    final context = key.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOut,
+        alignment: 0.1,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +50,7 @@ class HomeView extends StatelessWidget {
         child: Stack(
           children: [
             CustomScrollView(
+              controller: _scrollController,
               slivers: [
                 SliverPadding(
                   padding: const EdgeInsets.only(top: 100, left: 24, right: 24, bottom: 64),
@@ -43,7 +74,10 @@ class HomeView extends StatelessWidget {
                               children: [
                                 StaggeredGridTile.fit(
                                   crossAxisCellCount: crossAxisCount == 12 ? 7 : crossAxisCount == 8 ? 8 : 1,
-                                  child: const HeroSection(),
+                                  child: HeroSection(
+                                    onViewWorkTap: () => _scrollTo(_projectsKey),
+                                    onContactTap: () => _scrollTo(_contactKey),
+                                  ),
                                 ),
                                 StaggeredGridTile.fit(
                                   crossAxisCellCount: crossAxisCount == 12 ? 5 : crossAxisCount == 8 ? 8 : 1,
@@ -52,7 +86,10 @@ class HomeView extends StatelessWidget {
                                 ...StatsSection.buildTiles(crossAxisCount),
                                 StaggeredGridTile.fit(
                                   crossAxisCellCount: crossAxisCount,
-                                  child: const ProjectsSection(crossAxisCount: 12),
+                                  child: KeyedSubtree(
+                                    key: _projectsKey,
+                                    child: const ProjectsSection(crossAxisCount: 12),
+                                  ),
                                 ),
                                 StaggeredGridTile.fit(
                                   crossAxisCellCount: crossAxisCount,
@@ -60,11 +97,17 @@ class HomeView extends StatelessWidget {
                                 ),
                                 StaggeredGridTile.fit(
                                   crossAxisCellCount: crossAxisCount,
-                                  child: const ExperienceSection(crossAxisCount: 12),
+                                  child: KeyedSubtree(
+                                    key: _experienceKey,
+                                    child: const ExperienceSection(crossAxisCount: 12),
+                                  ),
                                 ),
                                 StaggeredGridTile.fit(
                                   crossAxisCellCount: crossAxisCount,
-                                  child: const ContactSection(),
+                                  child: KeyedSubtree(
+                                    key: _contactKey,
+                                    child: const ContactSection(),
+                                  ),
                                 ),
                               ],
                             );
@@ -76,7 +119,12 @@ class HomeView extends StatelessWidget {
                 ),
               ],
             ),
-            const nav.NavigationBar(),
+            nav.NavigationBar(
+              onAboutTap: _scrollToTop,
+              onProjectsTap: () => _scrollTo(_projectsKey),
+              onExperienceTap: () => _scrollTo(_experienceKey),
+              onHireTap: () => _scrollTo(_contactKey),
+            ),
           ],
         ),
       ),
