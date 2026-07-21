@@ -17,20 +17,24 @@ class _MagneticWrapperState extends State<MagneticWrapper> {
     return MouseRegion(
       onHover: (event) {
         final renderBox = _key.currentContext?.findRenderObject() as RenderBox?;
-        if (renderBox != null) {
+        if (renderBox != null && renderBox.hasSize) {
           final localPosition = renderBox.globalToLocal(event.position);
           final center = Offset(renderBox.size.width / 2, renderBox.size.height / 2);
           final dx = (localPosition.dx - center.dx) * 0.15;
           final dy = (localPosition.dy - center.dy) * 0.15;
-          setState(() {
-            _position = Offset(dx, dy);
-          });
+          if (mounted) {
+            setState(() {
+              _position = Offset(dx, dy);
+            });
+          }
         }
       },
       onExit: (_) {
-        setState(() {
-          _position = Offset.zero;
-        });
+        if (mounted) {
+          setState(() {
+            _position = Offset.zero;
+          });
+        }
       },
       child: AnimatedContainer(
         key: _key,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../theme/app_theme.dart';
 import '../components/glass_container.dart';
 import '../components/spotlight_wrapper.dart';
 
@@ -17,18 +18,24 @@ class TechArsenalSection extends StatelessWidget {
 
     return SpotlightWrapper(
       child: GlassContainer(
+        padding: const EdgeInsets.all(AppTheme.spaceXl),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Core Skills', style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppTheme.spaceXl),
             LayoutBuilder(
               builder: (context, constraints) {
+                final isWide = constraints.maxWidth > 600;
+                final itemWidth = isWide
+                    ? (constraints.maxWidth - AppTheme.spaceLg) / 2
+                    : constraints.maxWidth;
+
                 return Wrap(
-                  spacing: 24,
-                  runSpacing: 24,
+                  spacing: AppTheme.spaceLg,
+                  runSpacing: AppTheme.spaceLg,
                   children: techStack.map((tech) => SizedBox(
-                    width: constraints.maxWidth > 600 ? (constraints.maxWidth - 24) / 2 : constraints.maxWidth,
+                    width: itemWidth,
                     child: _TechItem(
                       name: tech['name'] as String,
                       icon: tech['icon'] as IconData,
@@ -37,7 +44,7 @@ class TechArsenalSection extends StatelessWidget {
                     ),
                   )).toList(),
                 );
-              }
+              },
             ),
           ],
         ),
@@ -57,11 +64,11 @@ class _TechItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppTheme.spaceMd + 4),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.03),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        color: Colors.white.withValues(alpha: 0.03),
+        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,24 +78,39 @@ class _TechItem extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusSm),
                 ),
-                child: Icon(icon, color: color),
+                child: Icon(icon, color: color, size: 22),
               ),
-              const SizedBox(width: 16),
-              Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+              const SizedBox(width: AppTheme.spaceMd),
+              Expanded(
+                child: Text(
+                  name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppTheme.spaceMd + 4),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: level,
-              backgroundColor: Colors.white.withOpacity(0.1),
+              backgroundColor: Colors.white.withValues(alpha: 0.1),
               valueColor: AlwaysStoppedAnimation<Color>(color),
               minHeight: 6,
-            ).animate().scaleX(begin: 0, end: 1, duration: 1000.ms, curve: Curves.easeOutCubic, alignment: Alignment.centerLeft),
+            ).animate().scaleX(
+              begin: 0,
+              end: 1,
+              duration: 1000.ms,
+              curve: Curves.easeOutCubic,
+              alignment: Alignment.centerLeft,
+            ),
           ),
         ],
       ),

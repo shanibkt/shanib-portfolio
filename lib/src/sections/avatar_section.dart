@@ -1,46 +1,107 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../theme/app_theme.dart';
 import '../components/glass_container.dart';
 import '../components/spotlight_wrapper.dart';
+
+const _avatarUrl = 'https://avatars.githubusercontent.com/u/78144198?v=4';
 
 class AvatarSection extends StatelessWidget {
   const AvatarSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+    final avatarSize = isMobile ? 160.0 : 220.0;
+    final badgeSize = isMobile ? 18.0 : 24.0;
+    final badgePad = isMobile ? 8.0 : 12.0;
+
     return SpotlightWrapper(
       child: GlassContainer(
-        height: 400,
+        padding: EdgeInsets.all(isMobile ? AppTheme.spaceMd : AppTheme.spaceXl),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Positioned(
-              top: 20,
-              left: 20,
-              child: const _FloatingBadge(icon: Icons.code, color: Colors.blueAccent, delay: 0),
-            ),
-            Positioned(
-              bottom: 20,
-              right: 20,
-              child: const _FloatingBadge(icon: Icons.terminal, color: Colors.greenAccent, delay: 500),
-            ),
-            Positioned(
-              top: 60,
-              right: 40,
-              child: const _FloatingBadge(icon: Icons.layers, color: Colors.purpleAccent, delay: 1000),
-            ),
             Container(
-              width: 220,
-              height: 220,
+              width: avatarSize,
+              height: avatarSize,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white.withOpacity(0.1), width: 4),
-                gradient: RadialGradient(
-                  colors: [Colors.blueAccent.withOpacity(0.2), Colors.purpleAccent.withOpacity(0.2)],
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  width: 3,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.blueAccent.withValues(alpha: 0.15),
+                    blurRadius: 24,
+                    spreadRadius: 4,
+                  ),
+                ],
+              ),
+              child: ClipOval(
+                child: Image.network(
+                  _avatarUrl,
+                  width: avatarSize,
+                  height: avatarSize,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: Colors.white.withValues(alpha: 0.03),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                              : null,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.white.withValues(alpha: 0.03),
+                      child: Center(
+                        child: Text('🧑‍💻', style: TextStyle(fontSize: avatarSize * 0.36)),
+                      ),
+                    );
+                  },
                 ),
               ),
-              child: const Center(
-                child: Text('🧑‍💻', style: TextStyle(fontSize: 80)),
+            ),
+            Positioned(
+              top: isMobile ? 4 : 8,
+              left: isMobile ? 4 : 8,
+              child: _FloatingBadge(
+                icon: Icons.code,
+                color: Colors.blueAccent,
+                delay: 0,
+                size: badgeSize,
+                padding: badgePad,
+              ),
+            ),
+            Positioned(
+              top: isMobile ? 36 : 56,
+              right: isMobile ? 4 : 8,
+              child: _FloatingBadge(
+                icon: Icons.layers,
+                color: Colors.purpleAccent,
+                delay: 1000,
+                size: badgeSize,
+                padding: badgePad,
+              ),
+            ),
+            Positioned(
+              bottom: isMobile ? 4 : 8,
+              right: isMobile ? 4 : 8,
+              child: _FloatingBadge(
+                icon: Icons.terminal,
+                color: Colors.greenAccent,
+                delay: 500,
+                size: badgeSize,
+                padding: badgePad,
               ),
             ),
           ],
@@ -54,20 +115,35 @@ class _FloatingBadge extends StatelessWidget {
   final IconData icon;
   final Color color;
   final int delay;
+  final double size;
+  final double padding;
 
-  const _FloatingBadge({required this.icon, required this.color, required this.delay});
+  const _FloatingBadge({
+    required this.icon,
+    required this.color,
+    required this.delay,
+    this.size = 24,
+    this.padding = 12,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        color: Color(0xFF0B0F19).withValues(alpha: 0.7),
+        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.25),
+            blurRadius: 8,
+            spreadRadius: 1,
+          ),
+        ],
       ),
-      child: Icon(icon, color: color, size: 24),
+      child: Icon(icon, color: color, size: size),
     ).animate(onPlay: (controller) => controller.repeat(reverse: true))
-     .moveY(begin: -8, end: 8, duration: 2000.ms, curve: Curves.easeInOut, delay: delay.ms);
+      .moveY(begin: -6, end: 6, duration: 2000.ms, curve: Curves.easeInOut, delay: delay.ms);
   }
 }

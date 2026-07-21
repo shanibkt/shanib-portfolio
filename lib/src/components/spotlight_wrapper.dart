@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
 
 class SpotlightWrapper extends StatefulWidget {
   final Widget child;
-  const SpotlightWrapper({super.key, required this.child});
+  final double borderRadius;
+
+  const SpotlightWrapper({
+    super.key,
+    required this.child,
+    this.borderRadius = AppTheme.radiusLg,
+  });
 
   @override
   State<SpotlightWrapper> createState() => _SpotlightWrapperState();
@@ -24,9 +31,13 @@ class _SpotlightWrapperState extends State<SpotlightWrapper> {
       onExit: (_) => setState(() => _isHovered = false),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final x = constraints.maxWidth > 0 ? (_mousePosition.dx / constraints.maxWidth) * 2 - 1 : 0.0;
-          final y = constraints.maxHeight > 0 ? (_mousePosition.dy / constraints.maxHeight) * 2 - 1 : 0.0;
-          
+          final x = constraints.maxWidth > 0
+              ? (_mousePosition.dx / constraints.maxWidth) * 2 - 1
+              : 0.0;
+          final y = constraints.maxHeight > 0
+              ? (_mousePosition.dy / constraints.maxHeight) * 2 - 1
+              : 0.0;
+
           return Stack(
             children: [
               widget.child,
@@ -37,11 +48,11 @@ class _SpotlightWrapperState extends State<SpotlightWrapper> {
                     opacity: _isHovered ? 1.0 : 0.0,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24.0),
+                        borderRadius: BorderRadius.circular(widget.borderRadius),
                         gradient: RadialGradient(
                           center: Alignment(x, y),
                           colors: [
-                            Colors.white.withOpacity(0.06),
+                            Colors.white.withValues(alpha: 0.06),
                             Colors.transparent,
                           ],
                           stops: const [0.0, 0.7],
@@ -54,7 +65,7 @@ class _SpotlightWrapperState extends State<SpotlightWrapper> {
               ),
             ],
           );
-        }
+        },
       ),
     );
   }

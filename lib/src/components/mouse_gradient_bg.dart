@@ -15,15 +15,15 @@ class _MouseGradientBgState extends State<MouseGradientBg> {
   Widget build(BuildContext context) {
     return MouseRegion(
       onHover: (event) {
-        setState(() {
-          _mousePosition = event.position;
-        });
+        if (mounted) {
+          setState(() {
+            _mousePosition = event.position;
+          });
+        }
       },
       child: Stack(
         children: [
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 100),
-            curve: Curves.easeOut,
+          Positioned(
             left: _mousePosition.dx - 400,
             top: _mousePosition.dy - 400,
             child: IgnorePointer(
@@ -34,7 +34,7 @@ class _MouseGradientBgState extends State<MouseGradientBg> {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      const Color(0xFF1D4ED8).withOpacity(0.08),
+                      const Color(0xFF1D4ED8).withValues(alpha: 0.08),
                       Colors.transparent,
                     ],
                     stops: const [0.0, 0.8],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../theme/app_theme.dart';
 import '../components/glass_container.dart';
 import '../components/spotlight_wrapper.dart';
 
@@ -11,9 +12,11 @@ class HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return SpotlightWrapper(
       child: GlassContainer(
-        height: 400,
+        padding: const EdgeInsets.all(AppTheme.spaceXl),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -21,9 +24,9 @@ class HeroSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
+                color: Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -35,68 +38,116 @@ class HeroSection extends StatelessWidget {
                       color: Colors.greenAccent,
                       shape: BoxShape.circle,
                     ),
-                  ).animate(onPlay: (controller) => controller.repeat()).fadeIn(duration: 500.ms).then().fadeOut(duration: 500.ms),
-                  const SizedBox(width: 8),
+                  ).animate(onPlay: (controller) => controller.repeat())
+                    .fadeIn(duration: 500.ms)
+                    .then()
+                    .fadeOut(duration: 500.ms),
+                  const SizedBox(width: AppTheme.spaceSm),
                   Text(
                     'Available for work',
-                    style: TextStyle(color: Colors.grey[300], fontSize: 12),
+                    style: TextStyle(color: Colors.grey[300], fontSize: 13),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppTheme.spaceLg),
             Text(
               "Hi, I'm Shanib",
-              style: Theme.of(context).textTheme.displayMedium,
+              style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                    fontSize: isMobile ? 32 : null,
+                  ),
             ),
+            const SizedBox(height: AppTheme.spaceSm),
             ShaderMask(
               shaderCallback: (bounds) => const LinearGradient(
                 colors: [Colors.blueAccent, Colors.indigoAccent],
               ).createShader(bounds),
               child: Text(
                 'Flutter Developer',
-                style: Theme.of(context).textTheme.displayMedium?.copyWith(color: Colors.white),
+                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                      color: Colors.white,
+                      fontSize: isMobile ? 28 : null,
+                    ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppTheme.spaceMd),
             Text(
               "I specialize in building scalable, production-ready mobile applications with clean architecture and seamless REST API integration.",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Colors.grey[400],
-                height: 1.6,
-              ),
-            ),
-            const SizedBox(height: 32),
-            Row(
-              children: [
-                ElevatedButton.icon(
-                  onPressed: onViewWorkTap,
-                  icon: const Icon(Icons.arrow_forward, size: 16),
-                  label: const Text('View Work'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    color: Colors.grey[400],
                   ),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton.icon(
-                  onPressed: onContactTap,
-                  icon: const Icon(Icons.email_outlined, size: 16),
-                  label: const Text('Contact Me'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: BorderSide(color: Colors.white.withOpacity(0.3)),
-                    ),
-                  ),
-                ),
-              ],
             ),
+            const SizedBox(height: AppTheme.spaceXl),
+            isMobile
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: onViewWorkTap,
+                        icon: const Icon(Icons.arrow_forward, size: 16),
+                        label: const Text('View Work'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 18),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppTheme.spaceSm),
+                      OutlinedButton.icon(
+                        onPressed: onContactTap,
+                        icon: const Icon(Icons.email_outlined, size: 16),
+                        label: const Text('Contact Me'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
+                          padding: const EdgeInsets.symmetric(vertical: 18),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: onViewWorkTap,
+                        icon: const Icon(Icons.arrow_forward, size: 16),
+                        label: const Text('View Work'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppTheme.spaceLg,
+                            vertical: 18,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: AppTheme.spaceMd),
+                      OutlinedButton.icon(
+                        onPressed: onContactTap,
+                        icon: const Icon(Icons.email_outlined, size: 16),
+                        label: const Text('Contact Me'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppTheme.spaceLg,
+                            vertical: 18,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
           ],
         ),
       ),

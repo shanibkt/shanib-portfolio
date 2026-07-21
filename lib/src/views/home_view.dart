@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import '../theme/app_theme.dart';
 import '../components/mouse_gradient_bg.dart';
 import '../components/navigation_bar.dart' as nav;
 import '../sections/hero_section.dart';
@@ -32,15 +33,21 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _scrollTo(GlobalKey key) {
-    final context = key.currentContext;
-    if (context != null) {
+    final ctx = key.currentContext;
+    if (ctx != null) {
       Scrollable.ensureVisible(
-        context,
+        ctx,
         duration: const Duration(milliseconds: 600),
         curve: Curves.easeInOut,
-        alignment: 0.1,
+        alignment: 0.08,
       );
     }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,13 +58,19 @@ class _HomeViewState extends State<HomeView> {
           children: [
             CustomScrollView(
               controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
-                  padding: const EdgeInsets.only(top: 100, left: 24, right: 24, bottom: 64),
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + 80,
+                    left: AppTheme.spaceLg,
+                    right: AppTheme.spaceLg,
+                    bottom: AppTheme.space4xl,
+                  ),
                   sliver: SliverToBoxAdapter(
                     child: Center(
                       child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 1200),
+                        constraints: const BoxConstraints(maxWidth: AppTheme.maxContentWidth),
                         child: LayoutBuilder(
                           builder: (context, constraints) {
                             int crossAxisCount = 12;
@@ -69,21 +82,23 @@ class _HomeViewState extends State<HomeView> {
 
                             return StaggeredGrid.count(
                               crossAxisCount: crossAxisCount,
-                              mainAxisSpacing: 24,
-                              crossAxisSpacing: 24,
+                              mainAxisSpacing: AppTheme.spaceLg,
+                              crossAxisSpacing: AppTheme.spaceLg,
                               children: [
                                 StaggeredGridTile.fit(
-                                  crossAxisCellCount: crossAxisCount == 12 ? 7 : crossAxisCount == 8 ? 8 : 1,
+                                  crossAxisCellCount:
+                                      crossAxisCount == 12 ? 7 : crossAxisCount == 8 ? 8 : 1,
                                   child: HeroSection(
                                     onViewWorkTap: () => _scrollTo(_projectsKey),
                                     onContactTap: () => _scrollTo(_contactKey),
                                   ),
                                 ),
                                 StaggeredGridTile.fit(
-                                  crossAxisCellCount: crossAxisCount == 12 ? 5 : crossAxisCount == 8 ? 8 : 1,
+                                  crossAxisCellCount:
+                                      crossAxisCount == 12 ? 5 : crossAxisCount == 8 ? 8 : 1,
                                   child: const AvatarSection(),
                                 ),
-                                ...StatsSection.buildTiles(crossAxisCount),
+                                StatsSection.buildRow(crossAxisCount),
                                 StaggeredGridTile.fit(
                                   crossAxisCellCount: crossAxisCount,
                                   child: KeyedSubtree(
