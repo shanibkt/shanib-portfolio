@@ -10,30 +10,45 @@ class TechArsenalSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final techStack = [
-      {'name': 'Flutter & Dart', 'icon': Icons.smartphone, 'level': 0.95, 'color': Colors.blue},
-      {'name': 'BLoC & Clean Arch', 'icon': Icons.layers, 'level': 0.90, 'color': Colors.cyan},
-      {'name': 'Firebase & REST APIs', 'icon': Icons.cloud, 'level': 0.85, 'color': Colors.amber},
-      {'name': 'Hive & SQLite', 'icon': Icons.storage, 'level': 0.85, 'color': Colors.green},
+      {'name': 'Flutter & Dart', 'icon': Icons.smartphone, 'level': 0.95, 'color': AppTheme.primary},
+      {'name': 'BLoC & Clean Arch', 'icon': Icons.layers, 'level': 0.90, 'color': AppTheme.accent},
+      {'name': 'Firebase & REST APIs', 'icon': Icons.cloud, 'level': 0.85, 'color': const Color(0xFFF59E0B)},
+      {'name': 'Hive & SQLite', 'icon': Icons.storage, 'level': 0.85, 'color': AppTheme.success},
     ];
 
     return SpotlightWrapper(
+      borderRadius: AppTheme.radius20,
       child: GlassContainer(
-        padding: const EdgeInsets.all(AppTheme.spaceXl),
+        borderRadius: AppTheme.radius20,
+        padding: const EdgeInsets.all(AppTheme.space32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Core Skills', style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(height: AppTheme.spaceXl),
+            Row(
+              children: [
+                Container(
+                  width: 4,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(2),
+                    gradient: AppTheme.accentGradient,
+                  ),
+                ),
+                const SizedBox(width: AppTheme.space16),
+                Text('Core Skills', style: Theme.of(context).textTheme.headlineMedium),
+              ],
+            ),
+            const SizedBox(height: AppTheme.space32),
             LayoutBuilder(
               builder: (context, constraints) {
                 final isWide = constraints.maxWidth > 600;
                 final itemWidth = isWide
-                    ? (constraints.maxWidth - AppTheme.spaceLg) / 2
+                    ? (constraints.maxWidth - AppTheme.space24) / 2
                     : constraints.maxWidth;
 
                 return Wrap(
-                  spacing: AppTheme.spaceLg,
-                  runSpacing: AppTheme.spaceLg,
+                  spacing: AppTheme.space24,
+                  runSpacing: AppTheme.space24,
                   children: techStack.map((tech) => SizedBox(
                     width: itemWidth,
                     child: _TechItem(
@@ -49,7 +64,7 @@ class TechArsenalSection extends StatelessWidget {
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 800.ms).slideY();
+    ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.05);
   }
 }
 
@@ -64,11 +79,11 @@ class _TechItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppTheme.spaceMd + 4),
+      padding: const EdgeInsets.all(AppTheme.space20),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.03),
-        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        color: AppTheme.cardBg,
+        borderRadius: BorderRadius.circular(AppTheme.radius12),
+        border: Border.all(color: AppTheme.border.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,34 +91,34 @@ class _TechItem extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(AppTheme.radius12),
                 ),
-                child: Icon(icon, color: color, size: 22),
+                child: Icon(icon, color: color, size: 20),
               ),
-              const SizedBox(width: AppTheme.spaceMd),
+              const SizedBox(width: AppTheme.space16),
               Expanded(
                 child: Text(
                   name,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontSize: 16,
-                    color: Colors.white,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: AppTheme.spaceMd + 4),
+          const SizedBox(height: AppTheme.space16),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(6),
             child: LinearProgressIndicator(
               value: level,
-              backgroundColor: Colors.white.withValues(alpha: 0.1),
+              backgroundColor: AppTheme.border.withValues(alpha: 0.3),
               valueColor: AlwaysStoppedAnimation<Color>(color),
-              minHeight: 6,
+              minHeight: 5,
             ).animate().scaleX(
               begin: 0,
               end: 1,

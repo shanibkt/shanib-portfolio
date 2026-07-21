@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
@@ -12,54 +11,69 @@ class GlassContainer extends StatelessWidget {
   final double? minHeight;
   final Color? backgroundColor;
   final List<Color>? gradientColors;
-  final bool noPadding;
+  final bool hasGlow;
+  final VoidCallback? onTap;
 
   const GlassContainer({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(AppTheme.spaceLg),
+    this.padding = const EdgeInsets.all(AppTheme.space24),
     this.margin,
-    this.borderRadius = AppTheme.radiusLg,
+    this.borderRadius = AppTheme.radius16,
     this.width,
     this.height,
     this.minHeight,
     this.backgroundColor,
     this.gradientColors,
-    this.noPadding = false,
+    this.hasGlow = false,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final card = Container(
       width: width,
       height: height,
       margin: margin,
       constraints: minHeight != null ? BoxConstraints(minHeight: minHeight!) : null,
       decoration: BoxDecoration(
+        color: backgroundColor ?? AppTheme.cardBg,
         borderRadius: BorderRadius.circular(borderRadius),
-        gradient: gradientColors != null
-            ? LinearGradient(
-                colors: gradientColors!.map((c) => c.withValues(alpha: 0.1)).toList(),
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
+        border: gradientColors != null
+            ? Border.all(width: 0)
+            : Border.all(color: AppTheme.border.withValues(alpha: 0.4)),
+        boxShadow: hasGlow
+            ? [
+                BoxShadow(
+                  color: (gradientColors?.first ?? AppTheme.primary).withValues(alpha: 0.08),
+                  blurRadius: 32,
+                  spreadRadius: 2,
+                ),
+              ]
             : null,
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-          child: Container(
-            padding: noPadding ? EdgeInsets.zero : padding,
-            decoration: BoxDecoration(
-              color: backgroundColor ?? AppTheme.glassBg,
+      foregroundDecoration: gradientColors != null
+          ? BoxDecoration(
               borderRadius: BorderRadius.circular(borderRadius),
-              border: Border.all(color: AppTheme.glassBorder, width: 1),
-            ),
-            child: child,
-          ),
-        ),
-      ),
+              border: Border.all(
+                width: 1.5,
+                color: Colors.transparent,
+              ),
+              gradient: LinearGradient(
+                colors: gradientColors!.map((c) => c.withValues(alpha: 0.3)).toList(),
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            )
+          : null,
+      padding: padding,
+      child: child,
     );
+
+    if (onTap != null) {
+      return GestureDetector(onTap: onTap, child: card);
+    }
+
+    return card;
   }
 }

@@ -63,9 +63,9 @@ class _HomeViewState extends State<HomeView> {
                 SliverPadding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).padding.top + 80,
-                    left: AppTheme.spaceLg,
-                    right: AppTheme.spaceLg,
-                    bottom: AppTheme.space4xl,
+                    left: AppTheme.space24,
+                    right: AppTheme.space24,
+                    bottom: AppTheme.space64,
                   ),
                   sliver: SliverToBoxAdapter(
                     child: Center(
@@ -82,8 +82,8 @@ class _HomeViewState extends State<HomeView> {
 
                             return StaggeredGrid.count(
                               crossAxisCount: crossAxisCount,
-                              mainAxisSpacing: AppTheme.spaceLg,
-                              crossAxisSpacing: AppTheme.spaceLg,
+                              mainAxisSpacing: AppTheme.space24,
+                              crossAxisSpacing: AppTheme.space24,
                               children: [
                                 StaggeredGridTile.fit(
                                   crossAxisCellCount:
@@ -103,7 +103,7 @@ class _HomeViewState extends State<HomeView> {
                                   crossAxisCellCount: crossAxisCount,
                                   child: KeyedSubtree(
                                     key: _projectsKey,
-                                    child: const ProjectsSection(crossAxisCount: 12),
+                                    child: ProjectsSection(crossAxisCount: crossAxisCount),
                                   ),
                                 ),
                                 StaggeredGridTile.fit(
@@ -114,7 +114,7 @@ class _HomeViewState extends State<HomeView> {
                                   crossAxisCellCount: crossAxisCount,
                                   child: KeyedSubtree(
                                     key: _experienceKey,
-                                    child: const ExperienceSection(crossAxisCount: 12),
+                                    child: ExperienceSection(crossAxisCount: crossAxisCount),
                                   ),
                                 ),
                                 StaggeredGridTile.fit(

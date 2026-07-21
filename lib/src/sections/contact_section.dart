@@ -10,26 +10,41 @@ class ContactSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SpotlightWrapper(
+      borderRadius: AppTheme.radius20,
       child: GlassContainer(
-        padding: const EdgeInsets.all(AppTheme.spaceXl),
+        borderRadius: AppTheme.radius20,
+        padding: const EdgeInsets.all(AppTheme.space32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Contact Me', style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(height: AppTheme.spaceXl),
+            Row(
+              children: [
+                Container(
+                  width: 4,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(2),
+                    gradient: AppTheme.primaryGradient,
+                  ),
+                ),
+                const SizedBox(width: AppTheme.space16),
+                Text('Contact Me', style: Theme.of(context).textTheme.headlineMedium),
+              ],
+            ),
+            const SizedBox(height: AppTheme.space32),
             LayoutBuilder(
               builder: (context, constraints) {
                 final isWide = constraints.maxWidth > 600;
                 final itemWidth = isWide
-                    ? (constraints.maxWidth - AppTheme.spaceLg) / 2
+                    ? (constraints.maxWidth - AppTheme.space24) / 2
                     : constraints.maxWidth;
 
                 return Wrap(
-                  spacing: AppTheme.spaceLg,
-                  runSpacing: AppTheme.spaceLg,
+                  spacing: AppTheme.space24,
+                  runSpacing: AppTheme.space24,
                   children: [
                     SizedBox(
-                      width: isWide ? itemWidth : constraints.maxWidth,
+                      width: itemWidth,
                       child: const _ContactItem(
                         icon: Icons.email_outlined,
                         label: 'Email',
@@ -37,7 +52,7 @@ class ContactSection extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      width: isWide ? itemWidth : constraints.maxWidth,
+                      width: itemWidth,
                       child: const _ContactItem(
                         icon: Icons.code,
                         label: 'GitHub',
@@ -45,7 +60,7 @@ class ContactSection extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      width: isWide ? itemWidth : constraints.maxWidth,
+                      width: itemWidth,
                       child: const _ContactItem(
                         icon: Icons.link,
                         label: 'LinkedIn',
@@ -59,7 +74,7 @@ class ContactSection extends StatelessWidget {
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 800.ms).slideY();
+    ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.05);
   }
 }
 
@@ -89,16 +104,16 @@ class _ContactItemState extends State<_ContactItem> {
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(AppTheme.spaceMd + 4),
+        padding: const EdgeInsets.all(AppTheme.space20),
         decoration: BoxDecoration(
           color: _isHovered
-              ? Colors.white.withValues(alpha: 0.06)
-              : Colors.white.withValues(alpha: 0.03),
-          borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+              ? AppTheme.primary.withValues(alpha: 0.06)
+              : AppTheme.cardBg,
+          borderRadius: BorderRadius.circular(AppTheme.radius12),
           border: Border.all(
             color: _isHovered
-                ? Colors.white.withValues(alpha: 0.15)
-                : Colors.white.withValues(alpha: 0.08),
+                ? AppTheme.primary.withValues(alpha: 0.2)
+                : AppTheme.border.withValues(alpha: 0.3),
           ),
         ),
         child: Row(
@@ -106,32 +121,36 @@ class _ContactItemState extends State<_ContactItem> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+                color: AppTheme.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppTheme.radius12),
               ),
-              child: Icon(widget.icon, color: AppTheme.accent, size: 22),
+              child: Icon(widget.icon, color: AppTheme.primary, size: 20),
             ),
-            const SizedBox(width: AppTheme.spaceMd),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.label,
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontSize: 13,
+            const SizedBox(width: AppTheme.space16),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.label,
+                    style: TextStyle(
+                      color: AppTheme.textMuted,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppTheme.spaceXs),
-                Text(
-                  widget.value,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.white,
+                  const SizedBox(height: AppTheme.space4),
+                  Text(
+                    widget.value,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: AppTheme.textPrimary,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

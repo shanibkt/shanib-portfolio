@@ -16,33 +16,67 @@ class ExperienceSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: AppTheme.spaceLg, bottom: AppTheme.spaceLg),
-          child: Text('Experience & Journey', style: Theme.of(context).textTheme.displaySmall),
-        ).animate().fadeIn().slideY(),
+        Row(
+          children: [
+            Container(
+              width: 4,
+              height: 28,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(2),
+                gradient: AppTheme.primaryGradient,
+              ),
+            ),
+            const SizedBox(width: AppTheme.space16),
+            Flexible(
+              child: Text('Experience & Journey', style: Theme.of(context).textTheme.displaySmall),
+            ),
+          ],
+        ).animate().fadeIn().slideX(begin: -0.05),
+        const SizedBox(height: AppTheme.space32),
         StaggeredGrid.count(
           crossAxisCount: crossAxisCount,
-          mainAxisSpacing: AppTheme.spaceLg,
-          crossAxisSpacing: AppTheme.spaceLg,
+          mainAxisSpacing: AppTheme.space24,
+          crossAxisSpacing: AppTheme.space24,
           children: [
             StaggeredGridTile.fit(
               crossAxisCellCount: cellCount,
               child: SpotlightWrapper(
+                borderRadius: AppTheme.radius20,
                 child: GlassContainer(
-                  padding: const EdgeInsets.all(AppTheme.spaceXl),
+                  borderRadius: AppTheme.radius20,
+                  padding: const EdgeInsets.all(AppTheme.space32),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('About Me', style: Theme.of(context).textTheme.headlineMedium),
-                      const SizedBox(height: AppTheme.spaceLg),
+                      const SizedBox(height: AppTheme.space20),
                       Text(
                         'I am a Flutter Developer with hands-on experience building scalable, production-ready mobile applications. My technical expertise includes BLoC state management, robust REST API integration, and various local storage solutions like Hive and SQLite.',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                      const SizedBox(height: AppTheme.spaceMd),
-                      Text(
-                        'My Goal: To build high-quality, scalable mobile applications and continuously grow as a software engineer while contributing to impactful products at leading global technology companies.',
-                        style: Theme.of(context).textTheme.bodyLarge,
+                      const SizedBox(height: AppTheme.space16),
+                      Container(
+                        padding: const EdgeInsets.all(AppTheme.space16),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primary.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(AppTheme.radius12),
+                          border: Border.all(color: AppTheme.primary.withValues(alpha: 0.1)),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(Icons.bolt, color: AppTheme.primary, size: 20),
+                            const SizedBox(width: AppTheme.space12),
+                            Expanded(
+                              child: Text(
+                                'My Goal: To build high-quality, scalable mobile applications and continuously grow as a software engineer while contributing to impactful products at leading global technology companies.',
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: AppTheme.textSecondary,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -52,13 +86,15 @@ class ExperienceSection extends StatelessWidget {
             StaggeredGridTile.fit(
               crossAxisCellCount: cellCount,
               child: SpotlightWrapper(
+                borderRadius: AppTheme.radius20,
                 child: GlassContainer(
-                  padding: const EdgeInsets.all(AppTheme.spaceXl),
+                  borderRadius: AppTheme.radius20,
+                  padding: const EdgeInsets.all(AppTheme.space32),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Experience', style: Theme.of(context).textTheme.headlineMedium),
-                      const SizedBox(height: AppTheme.spaceXl),
+                      const SizedBox(height: AppTheme.space32),
                       const _ExperienceItem(
                         period: 'April 2026 - Present',
                         role: 'Flutter Developer',
@@ -102,16 +138,16 @@ class _ExperienceItem extends StatelessWidget {
           Column(
             children: [
               Container(
-                width: 14,
-                height: 14,
-                margin: const EdgeInsets.only(top: 3),
+                width: 16,
+                height: 16,
+                margin: const EdgeInsets.only(top: 4),
                 decoration: BoxDecoration(
-                  color: Colors.blueAccent,
+                  gradient: AppTheme.primaryGradient,
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
+                  border: Border.all(color: AppTheme.background, width: 3),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blueAccent.withValues(alpha: 0.5),
+                      color: AppTheme.primary.withValues(alpha: 0.3),
                       blurRadius: 8,
                       spreadRadius: 2,
                     ),
@@ -122,49 +158,69 @@ class _ExperienceItem extends StatelessWidget {
                 Expanded(
                   child: Container(
                     width: 2,
-                    color: Colors.white.withValues(alpha: 0.1),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppTheme.primary.withValues(alpha: 0.3),
+                          AppTheme.primary.withValues(alpha: 0.0),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
             ],
           ),
-          const SizedBox(width: AppTheme.spaceLg),
+          const SizedBox(width: AppTheme.space20),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  period,
-                  style: const TextStyle(
-                    color: Colors.blueAccent,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(AppTheme.radius8),
+                    ),
+                    child: Text(
+                      period,
+                      style: const TextStyle(
+                        color: AppTheme.primary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppTheme.spaceXs),
-                Text(
-                  role,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                  const SizedBox(height: AppTheme.space12),
+                  Text(
+                    role,
+                    style: const TextStyle(
+                      color: AppTheme.textPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppTheme.spaceXs),
-                Text(
-                  company,
-                  style: TextStyle(color: Colors.grey[400], fontSize: 14),
-                ),
-                const SizedBox(height: AppTheme.spaceSm + 4),
-                Text(
-                  description,
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontSize: 14,
-                    height: 1.6,
+                  const SizedBox(height: AppTheme.space4),
+                  Text(
+                    company,
+                    style: TextStyle(
+                      color: AppTheme.textMuted,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                if (!isLast) const SizedBox(height: AppTheme.spaceXl),
-              ],
+                  const SizedBox(height: AppTheme.space12),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      color: AppTheme.textSecondary,
+                      fontSize: 14,
+                      height: 1.7,
+                    ),
+                  ),
+                  if (!isLast) const SizedBox(height: AppTheme.space32),
+                ],
+              ),
             ),
           ),
         ],

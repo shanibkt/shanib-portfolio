@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'magnetic_wrapper.dart';
@@ -25,100 +24,106 @@ class NavigationBar extends StatelessWidget {
       top: 0,
       left: 0,
       right: 0,
-      child: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: Container(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top + AppTheme.spaceMd,
-              bottom: AppTheme.spaceMd,
-              left: AppTheme.spaceLg,
-              right: AppTheme.spaceLg,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.3),
-              border: Border(
-                bottom: BorderSide(color: AppTheme.glassBorder),
-              ),
-            ),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: AppTheme.maxContentWidth),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: onAboutTap,
-                      child: RichText(
-                        text: TextSpan(
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: -0.5,
-                              ),
-                          children: const [
-                            TextSpan(text: 'Dev'),
-                            TextSpan(
-                              text: '.',
-                              style: TextStyle(color: AppTheme.accent),
+      child: Container(
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top + AppTheme.space16,
+          bottom: AppTheme.space16,
+          left: AppTheme.space24,
+          right: AppTheme.space24,
+        ),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppTheme.background.withValues(alpha: 0.85),
+              AppTheme.background.withValues(alpha: 0.0),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: AppTheme.maxContentWidth),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: onAboutTap,
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimary,
+                        letterSpacing: -0.5,
+                      ),
+                      children: [
+                        const TextSpan(text: 'Dev'),
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Container(
+                            width: 5,
+                            height: 5,
+                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            decoration: const BoxDecoration(
+                              color: AppTheme.primary,
+                              shape: BoxShape.circle,
                             ),
-                            TextSpan(text: 'Portfolio'),
-                          ],
+                          ),
+                        ),
+                        const TextSpan(text: 'Portfolio'),
+                      ],
+                    ),
+                  ),
+                ),
+                if (!isMobile)
+                  Row(
+                    children: [
+                      _NavItem(title: 'About', onTap: onAboutTap),
+                      const SizedBox(width: AppTheme.space32),
+                      _NavItem(title: 'Projects', onTap: onProjectsTap),
+                      const SizedBox(width: AppTheme.space32),
+                      _NavItem(title: 'Experience', onTap: onExperienceTap),
+                    ],
+                  ),
+                if (isMobile)
+                  MagneticWrapper(
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: AppTheme.primary,
+                        borderRadius: BorderRadius.circular(AppTheme.radiusFull),
+                      ),
+                      child: IconButton(
+                        onPressed: onHireTap,
+                        icon: const Icon(Icons.email_outlined, size: 20, color: Colors.white),
+                        padding: EdgeInsets.zero,
+                      ),
+                    ),
+                  )
+                else
+                  MagneticWrapper(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(AppTheme.radiusFull),
+                      ),
+                      child: GestureDetector(
+                        onTap: onHireTap,
+                        child: const Text(
+                          'Hire Me',
+                          style: TextStyle(
+                            color: Color(0xFF0F172A),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ),
-                    if (!isMobile)
-                      Row(
-                        children: [
-                          _NavItem(title: 'About', onTap: onAboutTap),
-                          const SizedBox(width: AppTheme.spaceXl),
-                          _NavItem(title: 'Projects', onTap: onProjectsTap),
-                          const SizedBox(width: AppTheme.spaceXl),
-                          _NavItem(title: 'Experience', onTap: onExperienceTap),
-                        ],
-                      ),
-                    if (isMobile)
-                      MagneticWrapper(
-                        child: ElevatedButton(
-                          onPressed: onHireTap,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.accent,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppTheme.spaceMd,
-                              vertical: 12,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            minimumSize: const Size(44, 44),
-                          ),
-                          child: const Icon(Icons.email_outlined, size: 20),
-                        ),
-                      )
-                    else
-                      MagneticWrapper(
-                        child: ElevatedButton(
-                          onPressed: onHireTap,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppTheme.spaceLg,
-                              vertical: 14,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          child: const Text(
-                            'Hire Me',
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+                  ),
+              ],
             ),
           ),
         ),

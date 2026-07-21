@@ -8,7 +8,7 @@ class SpotlightWrapper extends StatefulWidget {
   const SpotlightWrapper({
     super.key,
     required this.child,
-    this.borderRadius = AppTheme.radiusLg,
+    this.borderRadius = AppTheme.radius16,
   });
 
   @override
@@ -52,11 +52,11 @@ class _SpotlightWrapperState extends State<SpotlightWrapper> {
                         gradient: RadialGradient(
                           center: Alignment(x, y),
                           colors: [
-                            Colors.white.withValues(alpha: 0.06),
+                            AppTheme.primary.withValues(alpha: 0.06),
                             Colors.transparent,
                           ],
                           stops: const [0.0, 0.7],
-                          radius: 1.2,
+                          radius: 1.4,
                         ),
                       ),
                     ),

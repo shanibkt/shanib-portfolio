@@ -14,11 +14,14 @@ class AvatarSection extends StatelessWidget {
     final isMobile = MediaQuery.of(context).size.width < 600;
     final avatarSize = isMobile ? 160.0 : 220.0;
     final badgeSize = isMobile ? 18.0 : 24.0;
-    final badgePad = isMobile ? 8.0 : 12.0;
+    final badgePad = isMobile ? 8.0 : 10.0;
 
     return SpotlightWrapper(
+      borderRadius: AppTheme.radius20,
       child: GlassContainer(
-        padding: EdgeInsets.all(isMobile ? AppTheme.spaceMd : AppTheme.spaceXl),
+        borderRadius: AppTheme.radius20,
+        padding: EdgeInsets.all(isMobile ? AppTheme.space16 : AppTheme.space24),
+        height: isMobile ? 240 : 400,
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -28,13 +31,13 @@ class AvatarSection extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.15),
+                  color: AppTheme.border.withValues(alpha: 0.6),
                   width: 3,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blueAccent.withValues(alpha: 0.15),
-                    blurRadius: 24,
+                    color: AppTheme.primary.withValues(alpha: 0.15),
+                    blurRadius: 32,
                     spreadRadius: 4,
                   ),
                 ],
@@ -48,21 +51,21 @@ class AvatarSection extends StatelessWidget {
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return Container(
-                      color: Colors.white.withValues(alpha: 0.03),
+                      color: AppTheme.cardBg,
                       child: Center(
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
+                          valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
                           value: loadingProgress.expectedTotalBytes != null
                               ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
                               : null,
-                          color: Colors.blueAccent,
                         ),
                       ),
                     );
                   },
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
-                      color: Colors.white.withValues(alpha: 0.03),
+                      color: AppTheme.cardBg,
                       child: Center(
                         child: Text('🧑‍💻', style: TextStyle(fontSize: avatarSize * 0.36)),
                       ),
@@ -72,33 +75,33 @@ class AvatarSection extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: isMobile ? 4 : 8,
-              left: isMobile ? 4 : 8,
+              top: isMobile ? 8 : 16,
+              left: isMobile ? 8 : 16,
               child: _FloatingBadge(
                 icon: Icons.code,
-                color: Colors.blueAccent,
+                color: AppTheme.primary,
                 delay: 0,
                 size: badgeSize,
                 padding: badgePad,
               ),
             ),
             Positioned(
-              top: isMobile ? 36 : 56,
-              right: isMobile ? 4 : 8,
+              top: isMobile ? 44 : 72,
+              right: isMobile ? 8 : 16,
               child: _FloatingBadge(
                 icon: Icons.layers,
-                color: Colors.purpleAccent,
+                color: AppTheme.accent,
                 delay: 1000,
                 size: badgeSize,
                 padding: badgePad,
               ),
             ),
             Positioned(
-              bottom: isMobile ? 4 : 8,
-              right: isMobile ? 4 : 8,
+              bottom: isMobile ? 8 : 16,
+              right: isMobile ? 8 : 16,
               child: _FloatingBadge(
                 icon: Icons.terminal,
-                color: Colors.greenAccent,
+                color: AppTheme.success,
                 delay: 500,
                 size: badgeSize,
                 padding: badgePad,
@@ -123,7 +126,7 @@ class _FloatingBadge extends StatelessWidget {
     required this.color,
     required this.delay,
     this.size = 24,
-    this.padding = 12,
+    this.padding = 10,
   });
 
   @override
@@ -131,12 +134,12 @@ class _FloatingBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
-        color: Color(0xFF0B0F19).withValues(alpha: 0.7),
-        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+        color: AppTheme.background.withValues(alpha: 0.75),
+        borderRadius: BorderRadius.circular(AppTheme.radius12),
+        border: Border.all(color: AppTheme.border.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: color.withValues(alpha: 0.25),
+            color: color.withValues(alpha: 0.2),
             blurRadius: 8,
             spreadRadius: 1,
           ),

@@ -16,14 +16,27 @@ class ProjectsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: AppTheme.spaceLg, bottom: AppTheme.spaceLg),
-          child: Text('Featured Projects', style: Theme.of(context).textTheme.displaySmall),
-        ).animate().fadeIn().slideY(),
+        Row(
+          children: [
+            Container(
+              width: 4,
+              height: 32,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(2),
+                gradient: AppTheme.primaryGradient,
+              ),
+            ),
+            const SizedBox(width: AppTheme.space16),
+            Flexible(
+              child: Text('Featured Projects', style: Theme.of(context).textTheme.displaySmall),
+            ),
+          ],
+        ).animate().fadeIn().slideX(begin: -0.05),
+        const SizedBox(height: AppTheme.space32),
         StaggeredGrid.count(
           crossAxisCount: crossAxisCount,
-          mainAxisSpacing: AppTheme.spaceLg,
-          crossAxisSpacing: AppTheme.spaceLg,
+          mainAxisSpacing: AppTheme.space24,
+          crossAxisSpacing: AppTheme.space24,
           children: [
             StaggeredGridTile.fit(
               crossAxisCellCount: cellCount,
@@ -31,7 +44,7 @@ class ProjectsSection extends StatelessWidget {
                 title: 'Salon Studio',
                 description: 'A feature-rich salon booking and management app that streamlines scheduling, staff management, and offline syncing.',
                 tags: ['Flutter', 'BLoC', 'Firebase', 'Hive'],
-                gradient: [Colors.indigo, Colors.blue],
+                gradient: [Color(0xFF3B82F6), Color(0xFF8B5CF6)],
               ),
             ),
             StaggeredGridTile.fit(
@@ -40,7 +53,7 @@ class ProjectsSection extends StatelessWidget {
                 title: 'Your Next Project',
                 description: 'Placeholder for another amazing project you have built or will build in the future.',
                 tags: ['Dart', 'REST API', 'Clean Arch'],
-                gradient: [Colors.teal, Colors.green],
+                gradient: [Color(0xFF06B6D4), Color(0xFF3B82F6)],
                 delay: 200,
               ),
             ),
@@ -69,95 +82,86 @@ class _ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SpotlightWrapper(
+      borderRadius: AppTheme.radius20,
       child: GlassContainer(
-        padding: const EdgeInsets.all(AppTheme.spaceXl),
+        borderRadius: AppTheme.radius20,
+        padding: const EdgeInsets.all(AppTheme.space32),
         gradientColors: gradient,
+        hasGlow: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Wrap(
-              spacing: AppTheme.spaceSm,
-              runSpacing: AppTheme.spaceSm,
+              spacing: AppTheme.space8,
+              runSpacing: AppTheme.space8,
               children: tags.map((tag) => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  color: gradient.first.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppTheme.radius8),
+                  border: Border.all(color: gradient.first.withValues(alpha: 0.2)),
                 ),
                 child: Text(
                   tag,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: gradient.first,
                   ),
                 ),
               )).toList(),
             ),
-            const SizedBox(height: AppTheme.spaceLg),
+            const SizedBox(height: AppTheme.space24),
             Text(
               title,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppTheme.textPrimary,
               ),
             ),
-            const SizedBox(height: AppTheme.spaceSm + 4),
+            const SizedBox(height: AppTheme.space12),
             Text(
               description,
-              style: TextStyle(color: Colors.grey[400], height: 1.6),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.textSecondary,
+                    height: 1.7,
+                  ),
             ),
-            const SizedBox(height: AppTheme.spaceLg),
-            Row(
+            const SizedBox(height: AppTheme.space24),
+            Wrap(
+              spacing: AppTheme.space12,
+              runSpacing: AppTheme.space12,
               children: [
-                _ActionButton(icon: Icons.open_in_new, label: 'Live Demo'),
-                const SizedBox(width: AppTheme.spaceSm + 8),
-                _ActionButton(icon: Icons.code, label: 'GitHub'),
+                _buildAction(gradient.first, Icons.open_in_new, 'Live Demo'),
+                _buildAction(gradient.last, Icons.code, 'GitHub'),
               ],
             ),
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 800.ms, delay: delay.ms).slideY();
+    ).animate().fadeIn(duration: 800.ms, delay: delay.ms).slideY(begin: 0.05);
   }
-}
 
-class _ActionButton extends StatefulWidget {
-  final IconData icon;
-  final String label;
-
-  const _ActionButton({required this.icon, required this.label});
-
-  @override
-  State<_ActionButton> createState() => _ActionButtonState();
-}
-
-class _ActionButtonState extends State<_ActionButton> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
+  Widget _buildAction(Color color, IconData icon, String label) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppTheme.radius12),
+        border: Border.all(color: color.withValues(alpha: 0.25)),
+      ),
       child: ElevatedButton.icon(
         onPressed: () {},
-        icon: Icon(widget.icon, size: 16),
-        label: Text(widget.label),
+        icon: Icon(icon, size: 14),
+        label: Text(label),
         style: ElevatedButton.styleFrom(
-          backgroundColor: _isHovered
-              ? Colors.white.withValues(alpha: 0.12)
-              : Colors.white.withValues(alpha: 0.05),
-          foregroundColor: Colors.white,
+          backgroundColor: color.withValues(alpha: 0.08),
+          foregroundColor: color,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: AppTheme.spaceMd, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTheme.radiusSm),
-            side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+            borderRadius: BorderRadius.circular(AppTheme.radius12),
           ),
+          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
         ),
       ),
     );
