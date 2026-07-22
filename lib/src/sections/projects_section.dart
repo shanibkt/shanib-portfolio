@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
 import '../components/glass_container.dart';
 
@@ -28,6 +29,8 @@ class ProjectsSection extends StatelessWidget {
                 title: 'Salon Studio',
                 description: 'A feature-rich salon booking and management app that streamlines scheduling, staff management, and offline syncing.',
                 tags: ['Flutter', 'BLoC', 'Firebase', 'Hive'],
+                liveUrl: 'https://example.com/salon-studio',
+                githubUrl: 'https://github.com/shanii/salon-studio',
               ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.05).scaleXY(begin: 0.97, end: 1),
             ),
             StaggeredGridTile.fit(
@@ -73,12 +76,16 @@ class _ProjectCard extends StatefulWidget {
   final String description;
   final List<String> tags;
   final int delay;
+  final String? liveUrl;
+  final String? githubUrl;
 
   const _ProjectCard({
     required this.title,
     required this.description,
     required this.tags,
     this.delay = 0,
+    this.liveUrl,
+    this.githubUrl,
   });
 
   @override
@@ -87,6 +94,13 @@ class _ProjectCard extends StatefulWidget {
 
 class _ProjectCardState extends State<_ProjectCard> {
   bool _isHovered = false;
+
+  Future<void> _launch(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,8 +170,10 @@ class _ProjectCardState extends State<_ProjectCard> {
                 spacing: AppTheme.space12,
                 runSpacing: AppTheme.space12,
                 children: [
-                  _buildAction(AppTheme.primary, Icons.open_in_new, 'Live Demo'),
-                  _buildAction(AppTheme.textSecondary, Icons.code, 'GitHub'),
+                  if (widget.liveUrl != null)
+                    _buildAction(AppTheme.primary, Icons.open_in_new, 'Live Demo', widget.liveUrl!),
+                  if (widget.githubUrl != null)
+                    _buildAction(AppTheme.textSecondary, Icons.code, 'GitHub', widget.githubUrl!),
                 ],
               ),
             ],
@@ -167,14 +183,14 @@ class _ProjectCardState extends State<_ProjectCard> {
     );
   }
 
-  Widget _buildAction(Color color, IconData icon, String label) {
+  Widget _buildAction(Color color, IconData icon, String label, String url) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppTheme.radius12),
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: ElevatedButton.icon(
-        onPressed: () {},
+        onPressed: () => _launch(url),
         icon: Icon(icon, size: 14),
         label: Text(label),
         style: ElevatedButton.styleFrom(
