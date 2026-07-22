@@ -4,8 +4,6 @@ import '../theme/app_theme.dart';
 import '../components/mouse_gradient_bg.dart';
 import '../components/navigation_bar.dart' as nav;
 import '../sections/hero_section.dart';
-import '../sections/avatar_section.dart';
-import '../sections/stats_section.dart';
 import '../sections/projects_section.dart';
 import '../sections/tech_arsenal_section.dart';
 import '../sections/experience_section.dart';
@@ -86,19 +84,12 @@ class _HomeViewState extends State<HomeView> {
                               crossAxisSpacing: AppTheme.space24,
                               children: [
                                 StaggeredGridTile.fit(
-                                  crossAxisCellCount:
-                                      crossAxisCount == 12 ? 7 : crossAxisCount == 8 ? 8 : 1,
+                                  crossAxisCellCount: crossAxisCount,
                                   child: HeroSection(
                                     onViewWorkTap: () => _scrollTo(_projectsKey),
                                     onContactTap: () => _scrollTo(_contactKey),
                                   ),
                                 ),
-                                StaggeredGridTile.fit(
-                                  crossAxisCellCount:
-                                      crossAxisCount == 12 ? 5 : crossAxisCount == 8 ? 8 : 1,
-                                  child: const AvatarSection(),
-                                ),
-                                StatsSection.buildRow(crossAxisCount),
                                 StaggeredGridTile.fit(
                                   crossAxisCellCount: crossAxisCount,
                                   child: KeyedSubtree(
