@@ -31,6 +31,7 @@ class GlassContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final glowColor = gradientColors?.first ?? AppTheme.primary;
     final card = Container(
       width: width,
       height: height,
@@ -45,12 +46,19 @@ class GlassContainer extends StatelessWidget {
         boxShadow: hasGlow
             ? [
                 BoxShadow(
-                  color: (gradientColors?.first ?? AppTheme.primary).withValues(alpha: 0.08),
+                  color: glowColor.withValues(alpha: 0.12),
                   blurRadius: 32,
-                  spreadRadius: 2,
+                  spreadRadius: 4,
+                  offset: const Offset(0, 8),
                 ),
               ]
-            : null,
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
       ),
       foregroundDecoration: gradientColors != null
           ? BoxDecoration(
@@ -60,7 +68,7 @@ class GlassContainer extends StatelessWidget {
                 color: Colors.transparent,
               ),
               gradient: LinearGradient(
-                colors: gradientColors!.map((c) => c.withValues(alpha: 0.3)).toList(),
+                colors: gradientColors!.map((c) => c.withValues(alpha: 0.4)).toList(),
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

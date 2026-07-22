@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../theme/app_theme.dart';
 import '../components/glass_container.dart';
-import '../components/spotlight_wrapper.dart';
 
 const _avatarUrl = 'https://avatars.githubusercontent.com/u/78144198?v=4';
 
@@ -16,15 +15,11 @@ class HeroSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
-    return SpotlightWrapper(
-      borderRadius: AppTheme.radius20,
-      child: GlassContainer(
-        padding: EdgeInsets.all(isMobile ? AppTheme.space24 : AppTheme.space40),
-        borderRadius: AppTheme.radius20,
-        hasGlow: true,
-        minHeight: isMobile ? null : 500,
-        child: isMobile ? _buildMobileLayout(context) : _buildDesktopLayout(context),
-      ),
+    return GlassContainer(
+      padding: EdgeInsets.all(isMobile ? AppTheme.space24 : AppTheme.space40),
+      borderRadius: AppTheme.radius24,
+      minHeight: isMobile ? null : 500,
+      child: isMobile ? _buildMobileLayout(context) : _buildDesktopLayout(context),
     ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.1, end: 0);
   }
 
@@ -57,99 +52,48 @@ class HeroSection extends StatelessWidget {
   Widget _buildAvatar(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
     final avatarSize = isMobile ? 180.0 : 280.0;
-    final badgeSize = isMobile ? 18.0 : 24.0;
-    final badgePad = isMobile ? 8.0 : 10.0;
 
     return Center(
-      child: SizedBox(
-        width: avatarSize + 60,
-        height: avatarSize + 60,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              width: avatarSize,
-              height: avatarSize,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: AppTheme.border.withValues(alpha: 0.6),
-                  width: 3,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.primary.withValues(alpha: 0.2),
-                    blurRadius: 48,
-                    spreadRadius: 8,
+      child: Container(
+        width: avatarSize,
+        height: avatarSize,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: AppTheme.border.withValues(alpha: 0.6),
+            width: 2,
+          ),
+        ),
+        child: ClipOval(
+          child: Image.network(
+            _avatarUrl,
+            width: avatarSize,
+            height: avatarSize,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Container(
+                color: AppTheme.cardBg,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                        : null,
                   ),
-                ],
-              ),
-              child: ClipOval(
-                child: Image.network(
-                  _avatarUrl,
-                  width: avatarSize,
-                  height: avatarSize,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      color: AppTheme.cardBg,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: AppTheme.cardBg,
-                      child: Center(
-                        child: Text('🧑‍💻', style: TextStyle(fontSize: avatarSize * 0.36)),
-                      ),
-                    );
-                  },
                 ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              left: 0,
-              child: _FloatingBadge(
-                icon: Icons.code,
-                color: AppTheme.primary,
-                delay: 0,
-                size: badgeSize,
-                padding: badgePad,
-              ),
-            ),
-            Positioned(
-              top: isMobile ? 20 : 36,
-              right: 0,
-              child: _FloatingBadge(
-                icon: Icons.layers,
-                color: AppTheme.accent,
-                delay: 1000,
-                size: badgeSize,
-                padding: badgePad,
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              right: isMobile ? 8 : 16,
-              child: _FloatingBadge(
-                icon: Icons.terminal,
-                color: AppTheme.success,
-                delay: 500,
-                size: badgeSize,
-                padding: badgePad,
-              ),
-            ),
-          ],
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                color: AppTheme.cardBg,
+                child: Center(
+                  child: Text('🧑‍💻', style: TextStyle(fontSize: avatarSize * 0.36)),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -164,9 +108,9 @@ class HeroSection extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
           decoration: BoxDecoration(
-            color: AppTheme.success.withValues(alpha: 0.1),
+            color: AppTheme.surfaceLight,
             borderRadius: BorderRadius.circular(AppTheme.radiusFull),
-            border: Border.all(color: AppTheme.success.withValues(alpha: 0.2)),
+            border: Border.all(color: AppTheme.border.withValues(alpha: 0.4)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -177,22 +121,13 @@ class HeroSection extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppTheme.success,
                   shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.success.withValues(alpha: 0.5),
-                      blurRadius: 6,
-                    ),
-                  ],
                 ),
-              ).animate(onPlay: (controller) => controller.repeat())
-                .fadeIn(duration: 500.ms)
-                .then()
-                .fadeOut(duration: 500.ms),
+              ),
               const SizedBox(width: AppTheme.space8),
               Text(
                 'Available for work',
                 style: TextStyle(
-                  color: AppTheme.success.withValues(alpha: 0.9),
+                  color: AppTheme.textSecondary,
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),
@@ -205,18 +140,16 @@ class HeroSection extends StatelessWidget {
           "Hi, I'm Shanib",
           style: Theme.of(context).textTheme.displayMedium?.copyWith(
                 fontSize: isMobile ? 32 : null,
+                color: AppTheme.textPrimary,
               ),
         ),
         const SizedBox(height: AppTheme.space8),
-        ShaderMask(
-          shaderCallback: (bounds) => AppTheme.primaryGradient.createShader(bounds),
-          child: Text(
-            'Flutter Developer',
-            style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                  color: Colors.white,
-                  fontSize: isMobile ? 28 : null,
-                ),
-          ),
+        Text(
+          'Flutter Developer',
+          style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                color: AppTheme.primary,
+                fontSize: isMobile ? 28 : null,
+              ),
         ),
         const SizedBox(height: AppTheme.space20),
         Text(
@@ -250,87 +183,30 @@ class HeroSection extends StatelessWidget {
   }
 
   Widget _buildPrimaryButton(String label, IconData icon, VoidCallback? onTap) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppTheme.radius12),
-        gradient: AppTheme.primaryGradient,
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primary.withValues(alpha: 0.3),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ElevatedButton.icon(
-        onPressed: onTap,
-        icon: Icon(icon, size: 16),
-        label: Text(label),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
-          shadowColor: Colors.transparent,
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radius12)),
-        ),
+    return ElevatedButton.icon(
+      onPressed: onTap,
+      icon: Icon(icon, size: 16),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppTheme.primary,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radius12)),
       ),
     );
   }
 
   Widget _buildSecondaryButton(String label, IconData icon, VoidCallback? onTap) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppTheme.radius12),
-        border: Border.all(color: AppTheme.border.withValues(alpha: 0.6)),
-      ),
-      child: OutlinedButton.icon(
-        onPressed: onTap,
-        icon: Icon(icon, size: 16),
-        label: Text(label),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppTheme.textPrimary,
-          side: BorderSide.none,
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radius12)),
-        ),
+    return OutlinedButton.icon(
+      onPressed: onTap,
+      icon: Icon(icon, size: 16),
+      label: Text(label),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppTheme.textPrimary,
+        side: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radius12)),
       ),
     );
-  }
-}
-
-class _FloatingBadge extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final int delay;
-  final double size;
-  final double padding;
-
-  const _FloatingBadge({
-    required this.icon,
-    required this.color,
-    required this.delay,
-    this.size = 24,
-    this.padding = 10,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(padding),
-      decoration: BoxDecoration(
-        color: AppTheme.background.withValues(alpha: 0.75),
-        borderRadius: BorderRadius.circular(AppTheme.radius12),
-        border: Border.all(color: AppTheme.border.withValues(alpha: 0.3)),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.2),
-            blurRadius: 8,
-            spreadRadius: 1,
-          ),
-        ],
-      ),
-      child: Icon(icon, color: color, size: size),
-    ).animate(onPlay: (controller) => controller.repeat(reverse: true))
-      .moveY(begin: -6, end: 6, duration: 2000.ms, curve: Curves.easeInOut, delay: delay.ms);
   }
 }

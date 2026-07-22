@@ -4,34 +4,41 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   AppTheme._();
 
-  // Core palette
-  static const Color background = Color(0xFF080C14);
-  static const Color surface = Color(0xFF0F1623);
-  static const Color surfaceLight = Color(0xFF1A2332);
-  static const Color cardBg = Color(0xFF151E2C);
-  static const Color border = Color(0xFF243044);
-  static const Color borderLight = Color(0xFF1E2D42);
+  static const Color background = Color(0xFF080808);
+  static const Color surface = Color(0xFF101010);
+  static const Color surfaceLight = Color(0xFF181818);
+  static const Color cardBg = Color(0xFF0F0F0F);
+  static const Color border = Color(0xFF1C1C1E);
+  static const Color borderLight = Color(0xFF28282A);
 
-  // Text
-  static const Color textPrimary = Color(0xFFF1F5F9);
-  static const Color textSecondary = Color(0xFF94A3B8);
-  static const Color textMuted = Color(0xFF64748B);
+  static const Color textPrimary = Color(0xFFF5F5F5);
+  static const Color textSecondary = Color(0xFF9E9E9E);
+  static const Color textMuted = Color(0xFF616161);
 
-  // Accents
   static const Color primary = Color(0xFF3B82F6);
-  static const Color secondary = Color(0xFF8B5CF6);
-  static const Color accent = Color(0xFF06B6D4);
+  static const Color secondary = Color(0xFF2563EB);
+  static const Color accent = Color(0xFF3B82F6);
   static const Color success = Color(0xFF22C55E);
+  static const Color warning = Color(0xFFF59E0B);
 
-  // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [Color(0xFF3B82F6), Color(0xFF8B5CF6)],
+    colors: [Color(0xFF3B82F6), Color(0xFF2563EB)],
   );
   static const LinearGradient accentGradient = LinearGradient(
-    colors: [Color(0xFF06B6D4), Color(0xFF3B82F6)],
+    colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+  );
+  static const LinearGradient secondaryGradient = LinearGradient(
+    colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+  );
+  static const LinearGradient successGradient = LinearGradient(
+    colors: [Color(0xFF22C55E), Color(0xFF16A34A)],
+  );
+  static const LinearGradient bgGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF0A0A0A), Color(0xFF080808)],
   );
 
-  // Spacing (8px system)
   static const double space2 = 2;
   static const double space4 = 4;
   static const double space8 = 8;
@@ -45,21 +52,19 @@ class AppTheme {
   static const double space64 = 64;
   static const double space80 = 80;
 
-  // Border radius
   static const double radius8 = 8;
   static const double radius12 = 12;
   static const double radius16 = 16;
-  static const double radius20 = 20;
-  static const double radius24 = 24;
+  static const double radius20 = 24;
+  static const double radius24 = 32;
   static const double radiusFull = 999;
 
-  // Layout
   static const double maxContentWidth = 1200;
 
   static ThemeData get darkTheme {
     final colorScheme = ColorScheme.dark(
       primary: primary,
-      secondary: secondary,
+      secondary: primary,
       surface: surface,
       error: const Color(0xFFEF4444),
       onPrimary: Colors.white,
@@ -73,7 +78,6 @@ class AppTheme {
       colorScheme: colorScheme,
       primaryColor: primary,
       useMaterial3: true,
-
       textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
         displayLarge: GoogleFonts.spaceGrotesk(
           fontSize: 56,
@@ -124,7 +128,6 @@ class AppTheme {
           color: textPrimary,
         ),
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primary,
@@ -135,7 +138,6 @@ class AppTheme {
           textStyle: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
         ),
       ),
-
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: textPrimary,
@@ -145,7 +147,6 @@ class AppTheme {
           textStyle: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
         ),
       ),
-
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: cardBg,
@@ -165,13 +166,11 @@ class AppTheme {
         labelStyle: const TextStyle(color: textSecondary),
         hintStyle: const TextStyle(color: textMuted),
       ),
-
       dividerTheme: DividerThemeData(
         color: border.withValues(alpha: 0.4),
         thickness: 1,
         space: 0,
       ),
-
       chipTheme: ChipThemeData(
         backgroundColor: surfaceLight,
         side: BorderSide(color: border.withValues(alpha: 0.3)),

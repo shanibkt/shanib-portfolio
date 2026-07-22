@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
-import 'magnetic_wrapper.dart';
 
 class NavigationBar extends StatelessWidget {
   final VoidCallback? onAboutTap;
@@ -32,13 +31,9 @@ class NavigationBar extends StatelessWidget {
           right: AppTheme.space24,
         ),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppTheme.background.withValues(alpha: 0.85),
-              AppTheme.background.withValues(alpha: 0.0),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+          color: AppTheme.background.withValues(alpha: 0.85),
+          border: Border(
+            bottom: BorderSide(color: AppTheme.border.withValues(alpha: 0.2)),
           ),
         ),
         child: Center(
@@ -49,31 +44,37 @@ class NavigationBar extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: onAboutTap,
-                  child: RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
-                        letterSpacing: -0.5,
-                      ),
-                      children: [
-                        const TextSpan(text: 'Dev'),
-                        WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
-                          child: Container(
-                            width: 5,
-                            height: 5,
-                            margin: const EdgeInsets.symmetric(horizontal: 2),
-                            decoration: const BoxDecoration(
-                              color: AppTheme.primary,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Dev',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primary,
+                          letterSpacing: -0.5,
                         ),
-                        const TextSpan(text: 'Portfolio'),
-                      ],
-                    ),
+                      ),
+                      Container(
+                        width: 5,
+                        height: 5,
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      Text(
+                        'Portfolio',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textPrimary,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 if (!isMobile)
@@ -87,46 +88,50 @@ class NavigationBar extends StatelessWidget {
                     ],
                   ),
                 if (isMobile)
-                  MagneticWrapper(
-                    child: Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: AppTheme.primary,
-                        borderRadius: BorderRadius.circular(AppTheme.radiusFull),
-                      ),
-                      child: IconButton(
-                        onPressed: onHireTap,
-                        icon: const Icon(Icons.email_outlined, size: 20, color: Colors.white),
-                        padding: EdgeInsets.zero,
-                      ),
-                    ),
-                  )
+                  _buildHireFloating()
                 else
-                  MagneticWrapper(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(AppTheme.radiusFull),
-                      ),
-                      child: GestureDetector(
-                        onTap: onHireTap,
-                        child: const Text(
-                          'Hire Me',
-                          style: TextStyle(
-                            color: Color(0xFF0F172A),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  _buildHireButton(),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildHireButton() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppTheme.radiusFull),
+        border: Border.all(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+      ),
+      child: GestureDetector(
+        onTap: onHireTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+          child: Text(
+            'Hire Me',
+            style: TextStyle(
+              color: AppTheme.textPrimary,
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHireFloating() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppTheme.radiusFull),
+        border: Border.all(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+      ),
+      child: IconButton(
+        onPressed: onHireTap,
+        icon: Icon(Icons.email_outlined, size: 20, color: AppTheme.textPrimary),
+        padding: const EdgeInsets.all(12),
       ),
     );
   }
