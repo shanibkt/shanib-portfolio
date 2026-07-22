@@ -21,6 +21,21 @@ class _HomeViewState extends State<HomeView> {
   final _projectsKey = GlobalKey();
   final _experienceKey = GlobalKey();
   final _contactKey = GlobalKey();
+  double _scrollProgress = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    setState(() {
+      _scrollProgress = maxScroll > 0 ? currentScroll / maxScroll : 0;
+    });
+  }
 
   void _scrollToTop() {
     _scrollController.animateTo(
@@ -44,6 +59,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }
@@ -130,6 +146,7 @@ class _HomeViewState extends State<HomeView> {
               onProjectsTap: () => _scrollTo(_projectsKey),
               onExperienceTap: () => _scrollTo(_experienceKey),
               onHireTap: () => _scrollTo(_contactKey),
+              scrollProgress: _scrollProgress,
             ),
           ],
         ),

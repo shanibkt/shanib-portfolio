@@ -28,7 +28,7 @@ class ProjectsSection extends StatelessWidget {
                 title: 'Salon Studio',
                 description: 'A feature-rich salon booking and management app that streamlines scheduling, staff management, and offline syncing.',
                 tags: ['Flutter', 'BLoC', 'Firebase', 'Hive'],
-              ),
+              ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.05).scaleXY(begin: 0.97, end: 1),
             ),
             StaggeredGridTile.fit(
               crossAxisCellCount: cellCount,
@@ -37,7 +37,7 @@ class ProjectsSection extends StatelessWidget {
                 description: 'Placeholder for another amazing project you have built or will build in the future.',
                 tags: ['Dart', 'REST API', 'Clean Arch'],
                 delay: 200,
-              ),
+              ).animate().fadeIn(duration: 800.ms, delay: 200.ms).slideY(begin: 0.05).scaleXY(begin: 0.97, end: 1),
             ),
           ],
         ),
@@ -55,17 +55,20 @@ class ProjectsSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(2),
             color: AppTheme.primary,
           ),
-        ),
+        ).animate(onPlay: (controller) => controller.repeat(reverse: true))
+          .animate()
+          .fadeIn()
+          .slideX(begin: -0.05),
         const SizedBox(width: AppTheme.space16),
         Flexible(
           child: Text(title, style: Theme.of(context).textTheme.displaySmall),
-        ),
+        ).animate().fadeIn().slideX(begin: -0.05),
       ],
-    ).animate().fadeIn().slideX(begin: -0.05);
+    );
   }
 }
 
-class _ProjectCard extends StatelessWidget {
+class _ProjectCard extends StatefulWidget {
   final String title;
   final String description;
   final List<String> tags;
@@ -79,62 +82,89 @@ class _ProjectCard extends StatelessWidget {
   });
 
   @override
+  State<_ProjectCard> createState() => _ProjectCardState();
+}
+
+class _ProjectCardState extends State<_ProjectCard> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return GlassContainer(
-      borderRadius: AppTheme.radius24,
-      padding: const EdgeInsets.all(AppTheme.space32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Wrap(
-            spacing: AppTheme.space8,
-            runSpacing: AppTheme.space8,
-            children: tags.map((tag) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppTheme.primary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(AppTheme.radius8),
-                border: Border.all(color: AppTheme.primary.withValues(alpha: 0.15)),
-              ),
-              child: Text(
-                tag,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.primary.withValues(alpha: 0.8),
-                ),
-              ),
-            )).toList(),
-          ),
-          const SizedBox(height: AppTheme.space24),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.textPrimary,
-            ),
-          ),
-          const SizedBox(height: AppTheme.space12),
-          Text(
-            description,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppTheme.textSecondary,
-                  height: 1.7,
-                ),
-          ),
-          const SizedBox(height: AppTheme.space24),
-          Wrap(
-            spacing: AppTheme.space12,
-            runSpacing: AppTheme.space12,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+        transform: _isHovered
+            ? Matrix4.translationValues(0, -6, 0)
+            : Matrix4.identity(),
+        child: GlassContainer(
+          borderRadius: AppTheme.radius24,
+          padding: const EdgeInsets.all(AppTheme.space32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildAction(AppTheme.primary, Icons.open_in_new, 'Live Demo'),
-              _buildAction(AppTheme.textSecondary, Icons.code, 'GitHub'),
+              Wrap(
+                spacing: AppTheme.space8,
+                runSpacing: AppTheme.space8,
+                children: widget.tags.map((tag) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: _isHovered
+                        ? AppTheme.primary.withValues(alpha: 0.15)
+                        : AppTheme.primary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(AppTheme.radius8),
+                    border: Border.all(
+                      color: _isHovered
+                          ? AppTheme.primary.withValues(alpha: 0.3)
+                          : AppTheme.primary.withValues(alpha: 0.15),
+                    ),
+                  ),
+                  child: Text(
+                    tag,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: _isHovered
+                          ? AppTheme.primary
+                          : AppTheme.primary.withValues(alpha: 0.8),
+                    ),
+                  ),
+                )).toList(),
+              ),
+              const SizedBox(height: AppTheme.space24),
+              Text(
+                widget.title,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+              const SizedBox(height: AppTheme.space12),
+              Text(
+                widget.description,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.textSecondary,
+                      height: 1.7,
+                    ),
+              ),
+              const SizedBox(height: AppTheme.space24),
+              Wrap(
+                spacing: AppTheme.space12,
+                runSpacing: AppTheme.space12,
+                children: [
+                  _buildAction(AppTheme.primary, Icons.open_in_new, 'Live Demo'),
+                  _buildAction(AppTheme.textSecondary, Icons.code, 'GitHub'),
+                ],
+              ),
             ],
           ),
-        ],
+        ),
       ),
-    ).animate().fadeIn(duration: 800.ms, delay: delay.ms).slideY(begin: 0.05);
+    );
   }
 
   Widget _buildAction(Color color, IconData icon, String label) {

@@ -62,7 +62,7 @@ class ExperienceSection extends StatelessWidget {
                     ),
                   ],
                 ),
-              ).animate().fadeIn().slideY(),
+              ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.05).scaleXY(begin: 0.98, end: 1),
             ),
             StaggeredGridTile.fit(
               crossAxisCellCount: cellCount,
@@ -83,7 +83,7 @@ class ExperienceSection extends StatelessWidget {
                     ),
                   ],
                 ),
-              ).animate().fadeIn(delay: 200.ms).slideY(),
+              ).animate().fadeIn(duration: 600.ms, delay: 200.ms).slideY(begin: 0.05).scaleXY(begin: 0.98, end: 1),
             ),
           ],
         ),
@@ -143,7 +143,8 @@ class _ExperienceItem extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: AppTheme.cardBg, width: 2),
                 ),
-              ),
+              ).animate(onPlay: (controller) => controller.repeat(reverse: true))
+                .scaleXY(begin: 1, end: 1.4, duration: 2000.ms, curve: Curves.easeInOut),
               if (!isLast)
                 Expanded(
                   child: Container(

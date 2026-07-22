@@ -33,11 +33,12 @@ class TechArsenalSection extends StatelessWidget {
               return Wrap(
                 spacing: AppTheme.space24,
                 runSpacing: AppTheme.space24,
-                children: techStack.map((tech) => SizedBox(
+                children: techStack.asMap().entries.map((entry) => SizedBox(
                   width: itemWidth,
                   child: _TechItem(
-                    name: tech['name'] as String,
-                    icon: tech['icon'] as IconData,
+                    name: entry.value['name'] as String,
+                    icon: entry.value['icon'] as IconData,
+                    index: entry.key,
                   ),
                 )).toList(),
               );
@@ -62,42 +63,90 @@ class TechArsenalSection extends StatelessWidget {
         const SizedBox(width: AppTheme.space16),
         Text(title, style: Theme.of(context).textTheme.headlineMedium),
       ],
-    );
+    ).animate().fadeIn().slideX(begin: -0.05);
   }
 }
 
-class _TechItem extends StatelessWidget {
+class _TechItem extends StatefulWidget {
   final String name;
   final IconData icon;
+  final int index;
 
-  const _TechItem({required this.name, required this.icon});
+  const _TechItem({
+    required this.name,
+    required this.icon,
+    required this.index,
+  });
+
+  @override
+  State<_TechItem> createState() => _TechItemState();
+}
+
+class _TechItemState extends State<_TechItem> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppTheme.space20),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(AppTheme.radius16),
-        border: Border.all(color: AppTheme.border.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: AppTheme.primary, size: 22),
-          const SizedBox(width: AppTheme.space16),
-          Expanded(
-            child: Text(
-              name,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: AppTheme.textPrimary,
+    final delay = 300 + (widget.index * 100);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+        transform: _isHovered
+            ? Matrix4.translationValues(0, -4, 0)
+            : Matrix4.identity(),
+        padding: const EdgeInsets.all(AppTheme.space20),
+        decoration: BoxDecoration(
+          color: _isHovered ? AppTheme.surfaceLight : AppTheme.surfaceLight,
+          borderRadius: BorderRadius.circular(AppTheme.radius16),
+          border: Border.all(
+            color: _isHovered
+                ? AppTheme.primary.withValues(alpha: 0.3)
+                : AppTheme.border.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Row(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: _isHovered
+                    ? AppTheme.primary.withValues(alpha: 0.15)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(AppTheme.radius12),
+              ),
+              child: Icon(
+                widget.icon,
+                color: _isHovered ? AppTheme.primary : AppTheme.textSecondary,
+                size: 22,
               ),
             ),
-          ),
-          Icon(Icons.chevron_right, color: AppTheme.textMuted, size: 20),
-        ],
-      ),
+            const SizedBox(width: AppTheme.space16),
+            Expanded(
+              child: Text(
+                widget.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: _isHovered ? AppTheme.textPrimary : AppTheme.textSecondary,
+                ),
+              ),
+            ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              child: Icon(
+                Icons.chevron_right,
+                color: _isHovered ? AppTheme.primary : AppTheme.textMuted,
+                size: 20,
+              ),
+            ),
+          ],
+        ),
+      ).animate().fadeIn(duration: 600.ms, delay: delay.ms).slideX(begin: -0.03),
     );
   }
 }

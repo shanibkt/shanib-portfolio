@@ -6,6 +6,7 @@ class NavigationBar extends StatelessWidget {
   final VoidCallback? onProjectsTap;
   final VoidCallback? onExperienceTap;
   final VoidCallback? onHireTap;
+  final double scrollProgress;
 
   const NavigationBar({
     super.key,
@@ -13,6 +14,7 @@ class NavigationBar extends StatelessWidget {
     this.onProjectsTap,
     this.onExperienceTap,
     this.onHireTap,
+    this.scrollProgress = 0,
   });
 
   @override
@@ -23,90 +25,121 @@ class NavigationBar extends StatelessWidget {
       top: 0,
       left: 0,
       right: 0,
-      child: Container(
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top + AppTheme.space16,
-          bottom: AppTheme.space16,
-          left: AppTheme.space24,
-          right: AppTheme.space24,
-        ),
-        decoration: BoxDecoration(
-          color: AppTheme.background.withValues(alpha: 0.85),
-          border: Border(
-            bottom: BorderSide(color: AppTheme.border.withValues(alpha: 0.2)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + AppTheme.space16,
+              bottom: AppTheme.space16,
+              left: AppTheme.space24,
+              right: AppTheme.space24,
+            ),
+            decoration: BoxDecoration(
+              color: AppTheme.background.withValues(alpha: 0.85),
+              border: Border(
+                bottom: BorderSide(color: AppTheme.border.withValues(alpha: 0.2)),
+              ),
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: AppTheme.maxContentWidth),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: onAboutTap,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Dev',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primary,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          Container(
+                            width: 5,
+                            height: 5,
+                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            decoration: BoxDecoration(
+                              color: AppTheme.primary,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          Text(
+                            'Portfolio',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textPrimary,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (!isMobile)
+                      Row(
+                        children: [
+                          _NavItem(title: 'About', onTap: onAboutTap),
+                          const SizedBox(width: AppTheme.space32),
+                          _NavItem(title: 'Projects', onTap: onProjectsTap),
+                          const SizedBox(width: AppTheme.space32),
+                          _NavItem(title: 'Experience', onTap: onExperienceTap),
+                        ],
+                      ),
+                    if (isMobile)
+                      _HireFloating(onTap: onHireTap)
+                    else
+                      _HireButton(onTap: onHireTap),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: AppTheme.maxContentWidth),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: onAboutTap,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Dev',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.primary,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      Container(
-                        width: 5,
-                        height: 5,
-                        margin: const EdgeInsets.symmetric(horizontal: 2),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primary,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      Text(
-                        'Portfolio',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.textPrimary,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 100),
+            height: 2,
+            width: double.infinity,
+            color: AppTheme.background,
+            child: FractionallySizedBox(
+              alignment: Alignment.centerLeft,
+              widthFactor: scrollProgress.clamp(0.0, 1.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppTheme.primary,
+                      AppTheme.primary.withValues(alpha: 0.5),
                     ],
                   ),
                 ),
-                if (!isMobile)
-                  Row(
-                    children: [
-                      _NavItem(title: 'About', onTap: onAboutTap),
-                      const SizedBox(width: AppTheme.space32),
-                      _NavItem(title: 'Projects', onTap: onProjectsTap),
-                      const SizedBox(width: AppTheme.space32),
-                      _NavItem(title: 'Experience', onTap: onExperienceTap),
-                    ],
-                  ),
-                if (isMobile)
-                  _buildHireFloating()
-                else
-                  _buildHireButton(),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildHireButton() {
+class _HireButton extends StatelessWidget {
+  final VoidCallback? onTap;
+  const _HireButton({this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppTheme.radiusFull),
         border: Border.all(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
       ),
       child: GestureDetector(
-        onTap: onHireTap,
+        onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           child: Text(
@@ -121,15 +154,21 @@ class NavigationBar extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildHireFloating() {
+class _HireFloating extends StatelessWidget {
+  final VoidCallback? onTap;
+  const _HireFloating({this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppTheme.radiusFull),
         border: Border.all(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
       ),
       child: IconButton(
-        onPressed: onHireTap,
+        onPressed: onTap,
         icon: Icon(Icons.email_outlined, size: 20, color: AppTheme.textPrimary),
         padding: const EdgeInsets.all(12),
       ),

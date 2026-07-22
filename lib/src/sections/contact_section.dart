@@ -33,6 +33,7 @@ class ContactSection extends StatelessWidget {
                       icon: Icons.email_outlined,
                       label: 'Email',
                       value: 'shani@example.com',
+                      index: 0,
                     ),
                   ),
                   SizedBox(
@@ -41,6 +42,7 @@ class ContactSection extends StatelessWidget {
                       icon: Icons.code,
                       label: 'GitHub',
                       value: 'github.com/shanii',
+                      index: 1,
                     ),
                   ),
                   SizedBox(
@@ -49,6 +51,7 @@ class ContactSection extends StatelessWidget {
                       icon: Icons.link,
                       label: 'LinkedIn',
                       value: 'linkedin.com/in/shanii',
+                      index: 2,
                     ),
                   ),
                 ],
@@ -74,7 +77,7 @@ class ContactSection extends StatelessWidget {
         const SizedBox(width: AppTheme.space16),
         Text(title, style: Theme.of(context).textTheme.headlineMedium),
       ],
-    );
+    ).animate().fadeIn().slideX(begin: -0.05);
   }
 }
 
@@ -82,11 +85,13 @@ class _ContactItem extends StatefulWidget {
   final IconData icon;
   final String label;
   final String value;
+  final int index;
 
   const _ContactItem({
     required this.icon,
     required this.label,
     required this.value,
+    required this.index,
   });
 
   @override
@@ -98,25 +103,48 @@ class _ContactItemState extends State<_ContactItem> {
 
   @override
   Widget build(BuildContext context) {
+    final delay = 300 + (widget.index * 100);
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+        transform: _isHovered
+            ? Matrix4.translationValues(0, -4, 0)
+            : Matrix4.identity(),
         padding: const EdgeInsets.all(AppTheme.space20),
         decoration: BoxDecoration(
           color: _isHovered ? AppTheme.surfaceLight : AppTheme.cardBg,
           borderRadius: BorderRadius.circular(AppTheme.radius16),
           border: Border.all(
             color: _isHovered
-                ? AppTheme.primary.withValues(alpha: 0.2)
+                ? AppTheme.primary.withValues(alpha: 0.3)
                 : AppTheme.border.withValues(alpha: 0.3),
           ),
         ),
         child: Row(
           children: [
-            Icon(widget.icon, color: AppTheme.primary, size: 20),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: _isHovered
+                    ? AppTheme.primary.withValues(alpha: 0.15)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(AppTheme.radius12),
+              ),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                child: Icon(
+                  widget.icon,
+                  color: _isHovered ? AppTheme.primary : AppTheme.textSecondary,
+                  size: 20,
+                ),
+              ),
+            ),
             const SizedBox(width: AppTheme.space16),
             Flexible(
               child: Column(
@@ -134,10 +162,10 @@ class _ContactItemState extends State<_ContactItem> {
                   Text(
                     widget.value,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
-                      color: AppTheme.textPrimary,
+                      color: _isHovered ? AppTheme.textPrimary : AppTheme.textSecondary,
                     ),
                   ),
                 ],
@@ -145,7 +173,7 @@ class _ContactItemState extends State<_ContactItem> {
             ),
           ],
         ),
-      ),
+      ).animate().fadeIn(duration: 600.ms, delay: delay.ms).slideY(begin: 0.08),
     );
   }
 }
