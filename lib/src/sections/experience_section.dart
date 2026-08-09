@@ -95,13 +95,18 @@ class ExperienceSection extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 4,
-          height: 28,
+          padding: const EdgeInsets.all(AppTheme.space8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2),
-            color: AppTheme.primary,
+            color: AppTheme.primary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(AppTheme.radius12),
           ),
-        ),
+          child: const Icon(
+            Icons.work_history_rounded,
+            color: AppTheme.primary,
+            size: 24,
+          ),
+        ).animate(onPlay: (controller) => controller.repeat(reverse: true))
+          .shimmer(duration: 2000.ms, color: AppTheme.primary.withValues(alpha: 0.2)),
         const SizedBox(width: AppTheme.space16),
         Flexible(
           child: Text(title, style: Theme.of(context).textTheme.displaySmall),

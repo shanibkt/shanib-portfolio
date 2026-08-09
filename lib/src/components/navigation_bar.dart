@@ -52,31 +52,39 @@ class NavigationBar extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            'Dev',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.primary,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
                           Container(
-                            width: 5,
-                            height: 5,
-                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            padding: const EdgeInsets.all(AppTheme.space8),
                             decoration: BoxDecoration(
-                              color: AppTheme.primary,
-                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [AppTheme.primary, AppTheme.primary.withValues(alpha: 0.7)],
+                              ),
+                              borderRadius: BorderRadius.circular(AppTheme.radius12),
+                            ),
+                            child: const Icon(
+                              Icons.code_rounded,
+                              color: Colors.white,
+                              size: 20,
                             ),
                           ),
-                          Text(
-                            'Portfolio',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.textPrimary,
-                              letterSpacing: -0.5,
+                          const SizedBox(width: AppTheme.space12),
+                          RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: -0.5,
+                                fontFamily: 'SpaceGrotesk',
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: 'SHANIB',
+                                  style: TextStyle(color: AppTheme.textPrimary),
+                                ),
+                                TextSpan(
+                                  text: '.DEV',
+                                  style: TextStyle(color: AppTheme.primary),
+                                ),
+                              ],
                             ),
                           ),
                         ],
