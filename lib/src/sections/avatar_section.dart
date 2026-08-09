@@ -107,6 +107,17 @@ class AvatarSection extends StatelessWidget {
                 padding: badgePad,
               ),
             ),
+            Positioned(
+              bottom: isMobile ? 44 : 72,
+              left: isMobile ? 8 : 16,
+              child: _FloatingBadge(
+                icon: Icons.rocket_launch,
+                color: AppTheme.warning,
+                delay: 1500,
+                size: badgeSize,
+                padding: badgePad,
+              ),
+            ),
           ],
         ),
       ),

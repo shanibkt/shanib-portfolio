@@ -33,7 +33,7 @@ class ExperienceSection extends StatelessWidget {
                     Text('About Me', style: Theme.of(context).textTheme.headlineMedium),
                     const SizedBox(height: AppTheme.space20),
                     Text(
-                      'I am a Flutter Developer with hands-on experience building scalable, production-ready mobile applications. My technical expertise includes BLoC state management, robust REST API integration, and various local storage solutions like Hive and SQLite.',
+                      'I am a Flutter Developer with hands-on experience building scalable, production-ready mobile applications. My expertise spans the entire development lifecycle, from architecture and BLoC state management to the successful deployment and maintenance of apps on the Google Play Store and Apple App Store.',
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     const SizedBox(height: AppTheme.space16),
@@ -78,7 +78,7 @@ class ExperienceSection extends StatelessWidget {
                       period: 'April 2026 - Present',
                       role: 'Flutter Developer',
                       company: 'Appziac Technologies',
-                      description: 'Developing cross-platform mobile apps. Building responsive UI components, integrating RESTful APIs, managing state using BLoC, and working with local storage (Hive, SQLite, SharedPreferences).',
+                      description: 'Lead the development and maintenance of cross-platform mobile applications. Responsible for building responsive UI components, integrating complex RESTful APIs, and managing state using BLoC. Handled the full release cycle, including deploying and maintaining multiple production apps on both Google Play Store and Apple App Store.',
                       isLast: true,
                     ),
                   ],
@@ -128,85 +128,83 @@ class _ExperienceItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            Container(
+              width: 12,
+              height: 12,
+              margin: const EdgeInsets.only(top: 6),
+              decoration: BoxDecoration(
+                color: AppTheme.primary,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppTheme.cardBg, width: 2),
+              ),
+            ).animate(onPlay: (controller) => controller.repeat(reverse: true))
+              .scaleXY(begin: 1, end: 1.4, duration: 2000.ms, curve: Curves.easeInOut),
+            if (!isLast)
+              Container(
+                width: 1,
+                height: 150, // Fixed height for line or use a different approach
+                color: AppTheme.border.withValues(alpha: 0.4),
+              ),
+          ],
+        ),
+        const SizedBox(width: AppTheme.space20),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 12,
-                height: 12,
-                margin: const EdgeInsets.only(top: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppTheme.primary,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppTheme.cardBg, width: 2),
+                  color: AppTheme.surfaceLight,
+                  borderRadius: BorderRadius.circular(AppTheme.radius8),
                 ),
-              ).animate(onPlay: (controller) => controller.repeat(reverse: true))
-                .scaleXY(begin: 1, end: 1.4, duration: 2000.ms, curve: Curves.easeInOut),
-              if (!isLast)
-                Expanded(
-                  child: Container(
-                    width: 1,
-                    color: AppTheme.border.withValues(alpha: 0.4),
+                child: Text(
+                  period,
+                  style: const TextStyle(
+                    color: AppTheme.textMuted,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
                   ),
                 ),
+              ),
+              const SizedBox(height: AppTheme.space12),
+              Text(
+                role,
+                style: const TextStyle(
+                  color: AppTheme.textPrimary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              const SizedBox(height: AppTheme.space4),
+              Text(
+                company,
+                style: const TextStyle(
+                  color: AppTheme.textSecondary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: AppTheme.space12),
+              Text(
+                description,
+                style: const TextStyle(
+                  color: AppTheme.textSecondary,
+                  fontSize: 14,
+                  height: 1.7,
+                ),
+              ),
+              if (!isLast) const SizedBox(height: AppTheme.space32),
             ],
           ),
-          const SizedBox(width: AppTheme.space20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppTheme.surfaceLight,
-                    borderRadius: BorderRadius.circular(AppTheme.radius8),
-                  ),
-                  child: Text(
-                    period,
-                    style: TextStyle(
-                      color: AppTheme.textMuted,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppTheme.space12),
-                Text(
-                  role,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-                const SizedBox(height: AppTheme.space4),
-                Text(
-                  company,
-                  style: TextStyle(
-                    color: AppTheme.textSecondary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: AppTheme.space12),
-                Text(
-                  description,
-                  style: TextStyle(
-                    color: AppTheme.textSecondary,
-                    fontSize: 14,
-                    height: 1.7,
-                  ),
-                ),
-                if (!isLast) const SizedBox(height: AppTheme.space32),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
