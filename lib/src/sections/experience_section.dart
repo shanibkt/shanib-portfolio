@@ -51,7 +51,7 @@ class ExperienceSection extends StatelessWidget {
                           const SizedBox(width: AppTheme.space12),
                           Expanded(
                             child: Text(
-                              'My Goal: To build high-quality, scalable mobile applications and continuously grow as a software engineer while contributing to impactful products at leading global technology companies.',
+                              'My Goal: To build high-quality, scalable mobile applications and continuously grow as a software engineer while contributing to impactful products ',
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: AppTheme.textSecondary,
                                   ),
