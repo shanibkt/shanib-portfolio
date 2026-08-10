@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -104,10 +105,10 @@ class HeroSection extends StatelessWidget {
   }
 
   Future<void> _downloadCV() async {
-    // For Flutter Web, assets are served at assets/assets/FILE
-    // but sometimes just assets/FILE works depending on base href.
-    // Most reliable for web is often placing it in web/ and using 'cv.pdf'
-    final Uri url = Uri.parse('assets/cv.pdf');
+    // For local development (debug), 'assets/cv.pdf' works.
+    // For GitHub Pages (release), files in the web/ folder are served at the root.
+    final String path = kReleaseMode ? 'cv.pdf' : 'assets/cv.pdf';
+    final Uri url = Uri.parse(path);
     if (!await launchUrl(url)) {
       debugPrint('Could not launch $url');
     }

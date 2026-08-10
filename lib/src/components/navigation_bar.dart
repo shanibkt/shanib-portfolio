@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
@@ -19,7 +20,8 @@ class NavigationBar extends StatelessWidget {
   });
 
   Future<void> _downloadCV() async {
-    final Uri url = Uri.parse('assets/cv.pdf');
+    final String path = kReleaseMode ? 'cv.pdf' : 'assets/cv.pdf';
+    final Uri url = Uri.parse(path);
     if (!await launchUrl(url)) {
       debugPrint('Could not launch $url');
     }
