@@ -244,4 +244,5 @@ class HeroSection extends StatelessWidget {
       ),
     ).animate().fadeIn(duration: 600.ms, delay: delay.ms).slideY(begin: 0.1);
   }
+
 }
