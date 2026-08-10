@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
 
 class NavigationBar extends StatelessWidget {
@@ -16,6 +17,13 @@ class NavigationBar extends StatelessWidget {
     this.onHireTap,
     this.scrollProgress = 0,
   });
+
+  Future<void> _downloadCV() async {
+    final Uri url = Uri.parse('assets/cv.pdf');
+    if (!await launchUrl(url)) {
+      debugPrint('Could not launch $url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +106,8 @@ class NavigationBar extends StatelessWidget {
                           _NavItem(title: 'Projects', onTap: onProjectsTap),
                           const SizedBox(width: AppTheme.space32),
                           _NavItem(title: 'Experience', onTap: onExperienceTap),
+                          const SizedBox(width: AppTheme.space32),
+                          _NavItem(title: 'Resume', onTap: _downloadCV),
                         ],
                       ),
                     if (isMobile)

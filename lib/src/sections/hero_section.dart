@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
 import '../components/glass_container.dart';
 import '../components/magnetic_wrapper.dart';
@@ -102,6 +103,16 @@ class HeroSection extends StatelessWidget {
     );
   }
 
+  Future<void> _downloadCV() async {
+    // For Flutter Web, assets are served at assets/assets/FILE
+    // but sometimes just assets/FILE works depending on base href.
+    // Most reliable for web is often placing it in web/ and using 'cv.pdf'
+    final Uri url = Uri.parse('assets/cv.pdf');
+    if (!await launchUrl(url)) {
+      debugPrint('Could not launch $url');
+    }
+  }
+
   Widget _buildTextContent(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
@@ -169,22 +180,35 @@ class HeroSection extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ).animate().fadeIn(duration: 600.ms, delay: 800.ms).slideY(begin: 0.1),
         const SizedBox(height: AppTheme.space32),
-        isMobile
-            ? Column(
+        LayoutBuilder(
+          builder: (context, constraints) {
+            // Using a slightly larger threshold for the buttons than the section-wide isMobile
+            final wrapButtons = constraints.maxWidth < 550;
+
+            if (wrapButtons) {
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildPrimaryButton('View Work', Icons.arrow_forward, onViewWorkTap),
                   const SizedBox(height: AppTheme.space12),
                   _buildSecondaryButton('Contact Me', Icons.email_outlined, onContactTap),
+                  const SizedBox(height: AppTheme.space12),
+                  _buildSecondaryButton('Download CV', Icons.download_rounded, _downloadCV, delay: 1200),
                 ],
-              )
-            : Row(
-                children: [
-                  _buildPrimaryButton('View Work', Icons.arrow_forward, onViewWorkTap),
-                  const SizedBox(width: AppTheme.space16),
-                  _buildSecondaryButton('Contact Me', Icons.email_outlined, onContactTap),
-                ],
-              ),
+              );
+            }
+
+            return Row(
+              children: [
+                _buildPrimaryButton('View Work', Icons.arrow_forward, onViewWorkTap),
+                const SizedBox(width: AppTheme.space16),
+                _buildSecondaryButton('Contact Me', Icons.email_outlined, onContactTap),
+                const SizedBox(width: AppTheme.space16),
+                _buildSecondaryButton('Download CV', Icons.download_rounded, _downloadCV, delay: 1200),
+              ],
+            );
+          },
+        ),
       ],
     );
   }
@@ -205,7 +229,7 @@ class HeroSection extends StatelessWidget {
     ).animate().fadeIn(duration: 600.ms, delay: 1000.ms).slideY(begin: 0.1);
   }
 
-  Widget _buildSecondaryButton(String label, IconData icon, VoidCallback? onTap) {
+  Widget _buildSecondaryButton(String label, IconData icon, VoidCallback? onTap, {int delay = 1100}) {
     return MagneticWrapper(
       child: OutlinedButton.icon(
         onPressed: onTap,
@@ -218,6 +242,6 @@ class HeroSection extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radius12)),
         ),
       ),
-    ).animate().fadeIn(duration: 600.ms, delay: 1100.ms).slideY(begin: 0.1);
+    ).animate().fadeIn(duration: 600.ms, delay: delay.ms).slideY(begin: 0.1);
   }
 }
