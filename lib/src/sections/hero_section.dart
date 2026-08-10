@@ -105,10 +105,9 @@ class HeroSection extends StatelessWidget {
   }
 
   Future<void> _downloadCV() async {
-    // For local development (debug), 'assets/cv.pdf' works.
-    // For GitHub Pages (release), files in the web/ folder are served at the root.
-    final String path = kReleaseMode ? 'cv.pdf' : 'assets/cv.pdf';
-    final Uri url = Uri.parse(path);
+    // Since cv.pdf is in the web/ folder, it's served at the root of the site.
+    // This works both locally and on GitHub Pages.
+    final Uri url = Uri.parse('cv.pdf');
     if (!await launchUrl(url)) {
       debugPrint('Could not launch $url');
     }

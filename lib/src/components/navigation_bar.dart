@@ -20,8 +20,8 @@ class NavigationBar extends StatelessWidget {
   });
 
   Future<void> _downloadCV() async {
-    final String path = kReleaseMode ? 'cv.pdf' : 'assets/cv.pdf';
-    final Uri url = Uri.parse(path);
+    // Since cv.pdf is in the web/ folder, it's served at the root of the site.
+    final Uri url = Uri.parse('cv.pdf');
     if (!await launchUrl(url)) {
       debugPrint('Could not launch $url');
     }
